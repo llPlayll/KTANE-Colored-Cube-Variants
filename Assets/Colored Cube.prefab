@@ -157,7 +157,6 @@ GameObject:
   - component: {fileID: 114682126398842566}
   - component: {fileID: 114723428541822788}
   - component: {fileID: 114432483186534668}
-  - component: {fileID: 114859061114248786}
   m_Layer: 0
   m_Name: Colored Cube
   m_TagString: Untagged
@@ -1689,28 +1688,6 @@ MonoBehaviour:
   AllowSelectionWrapY: 0
   ForceSelectionHighlight: 0
   ForceInteractionHighlight: 0
---- !u!114 &114859061114248786
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1492283495299170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 047eaba4e80ffd84b9706729b49b9410, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Bomb: {fileID: 114891783106324484}
-  Audio: {fileID: 114276295216121554}
-  Colorblind: {fileID: 114432483186534668}
-  cubeMeshRenderer: {fileID: 23921480355431670}
-  colorblindText: {fileID: 102303271479092650}
-  indexText: {fileID: 102203868012013824}
-  CubeButton: {fileID: 114684486024296034}
-  BackFace: {fileID: 114083392806810702}
-  RightFace: {fileID: 114165098008663826}
-  FrontFace: {fileID: 114711238772799182}
-  LeftFace: {fileID: 114095577964305630}
 --- !u!114 &114891783106324484
 MonoBehaviour:
   m_ObjectHideFlags: 1
