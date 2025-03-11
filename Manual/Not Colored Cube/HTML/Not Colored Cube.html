@@ -14,10 +14,11 @@
             border: none;
         }
 
+        ul { margin: 0; }
         code { text-decoration: underline; }
 
         .page-footer::before { content: 'Page '; }
-        .page-footer::after { content: ' of 2'; }
+        .page-footer::after { content: ' of 4'; }
     </style>
 </head>
 <body>
@@ -37,30 +38,33 @@
                     The entire cube is selectable.
                 </p>
                 <p>
-                    Throughout this module’s 10 stages (with the number in the Top left of the cube’s top face indicating the stage number), you will need to keep track of a variable <code>C</code>.
+                    Throughout this module, you will need to keep track of a variable <code>C</code>.
                     This variable can be of 4 different variable types given below.
                     Initially, <code>C</code> starts out <u>Undefined</u>.
                     <b>Keep in mind, that when <code>C</code> is defined as a variable of some type, its type cannot be changed afterwards.</b>
                 </p>
                 <ul>
                     <li>
-                        Number - an integer number in range 0-9999.
+                        <u>Number</u> - an integer number in range 0-9999.
                         If at any point <code>C</code> goes out of this range, take <code>C</code> modulo 10000.
-                        Operations include: addition, subtraction, multiplication, division, modulo (dividing by 0 and taking <code>C</code> modulo 0 both return 0; when dividing, always immediately drop decimals) and reversing the number.
+                        Operations include: addition, subtraction, multiplication, division, modulo (dividing by 0 and taking a number modulo 0 both return 0; when dividing, always immediately drop decimals) and reversing the number.
                     </li>
                     <li>
-                        String - a string containing exclusively letters.
-                        The string can be modified by prepending/inserting/appending characters or strings, and additionally, you are able to take one of the string’s substrings for certaing operations or conditions.
+                        <u>String</u> - a string containing exclusively letters.
+                        The string can be modified by prepending/inserting/appending characters or strings to it, reversing it, or shifing it to the left/right by a certain amount.
+                        Additionally, you are able to take one of the string’s substrings for certaing operations or conditions.
                     </li>
                     <li>
-                        Boolean - a truth value which can be either <code>TRUE</code> or <code>FALSE</code>.
+                        <u>Boolean</u> - a truth value which can be either <code>TRUE</code> or <code>FALSE</code>.
                         The boolean variable can be modified by applying one of the logical operators to it.
-                        This variable can also be used/set as the answer to a <code>TRUE</code>/<code>FALSE</code> question in certain conditions.
+                        This variable can also be used/set as the answer of a <code>TRUE</code>/<code>FALSE</code> question in certain conditions.
                     </li>
                     <li>
-                        Undefined - the only operation that can be done with this variable is defining it as a variable of one of the types above.
+                        <u>Undefined</u> - the only operation that can be done with this variable is defining it as a variable of one of the types above.
                     </li>
                 </ul>
+                <p>Follow the rules for each of the 10 stages of this module (with the number in the top left corner of the Cube’s top face indicating the stage number) on the next pages.</p><br>
+                <p>Note: in the rules, “S#” refers to the Serial Number; unless stated otherwise, alphabetic positions are A1Z26 - A = 1, B = 2...Z = 26</p>
             </div>
             <div class="page-footer relative-footer">1</div>
         </div>
@@ -70,11 +74,312 @@
                 <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
                 <span class="page-header-section-title">Not Colored Cube</span>
             </div>
-            <div class="page-content">
-                <h3>Section</h3>
-                <p>More info.</p>
+            <div class="page-content" style="font-size: 90%;">
+                <h3>Stage 1</h3>
+                <ul>
+                    <li>
+                        If the cube is...
+                        <ul>
+                            <li>
+                                Red or Cyan - define <code>C</code> as a <u>Number</u> equal to the last digit of the S#.
+                                Press the cube when the last seconds digit of the timer is equal to <code>C</code>.
+                            </li>
+                            <li>
+                                Yellow - define <code>C</code> as a <u>String</u> - the concatenation of S#’s letters (left-to-right).
+                                Press the cube when the seconds of the timer form a number that is divisible by [alphabetic position of the last letter in <code>C</code>, plus 1].
+                            </li>
+                            <li>
+                                White or Black - define <code>C</code> as a <u>Boolean</u> that is equal to the answer to the question “Is the first digit of the S# even?”.
+                                Press the cube when the answer to the question “Does the last seconds digit of the timer share parity with the number of battery holders?” matches <code>C</code>.
+                            </li>
+                            <li>
+                                None of the above - press the cube when the last digit of the timer is prime.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Stage 2</h3>
+                <ul>
+                    <li>
+                        If <code>C</code> is...
+                        <ul>
+                            <li>
+                                A <u>Number</u> - multiply it by 3 and then add 1.
+                                Press the cube when the seconds of the timer form the number [<code>C</code> % 60].
+                            </li>
+                            <li>
+                                A <u>String</u> - append [batteries + battery holders], taken modulo 26 and converted into a letter A0Z25 (0 = A, 1 = B... 25 = Z) to <code>C</code>.
+                                Press the cube when the seconds of the timer, when taken modulo 26 and converted into a letter A0Z25, are present in <code>C</code>.
+                            </li>
+                            <li>
+                                A <u>Boolean</u> - if the cube is Black, Blue, Green or Magenta, apply the NOT operator to <code>C</code>.
+                                Press the cube when the answewr to the question “Is the last digit of the timer composite?” matches <code>C</code>.
+                            </li>
+                            <li>
+                                <u>Undefined</u> - if there is an empty port plate, define <code>C</code> as a <code>TRUE</code> <u>Boolean</u>.
+                                Otherwise, if there are 5 or more ports, define <code>C</code> as a <u>Number</u> equal to [ports * port plates].
+                                Press the cube at any time.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Stage 3</h3>
+                <ul>
+                    <li>
+                        If the cube is Red, Green or Blue and <code>C</code> is...
+                        <ul>
+                            <li>
+                                A <u>Number</u> - reverse it, then multiply it by its digital root.
+                            </li>
+                            <li>
+                                A <u>String</u> - reverse it, then, if <code>C</code>’s length is odd, prepend “ODD” to it, and finally set <code>C</code> to be equal to its first half.
+                            </li>
+                            <li>
+                                A <u>Boolean</u> - XNOR it with the answer to the question “Is there an even number of regular modules on this bomb?”.
+                            </li>
+                            <li>
+                                <u>Undefined</u> - define it as a <code>FALSE</code> <u>Boolean</u>, and then follow the rule for <code>C</code> being a <u>Boolean</u> above.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        Take the product of the following edgework values (if any of them are equal to 0, substitute 1 for them instead): batteries, battery holders, indicators, ports, port plates, sum of S#’s digits.
+                        If <code>C</code> is a non-zero <u>Number</u>, multiply the result by <code>C</code>.
+                        Press the cube when the seconds of the timer form the result of the previous calculation, taken modulo 60.
+                    </li>
+                </ul>
             </div>
             <div class="page-footer relative-footer">2</div>
+        </div>
+
+        <div class="page page-bg-03" >
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Not Colored Cube</span>
+            </div>
+            <div class="page-content" style="font-size: 90%;">
+                <h3>Stage 4</h3>
+                <ul>
+                    <li>
+                        If the cube is White and <code>C</code> is defined:
+                        <ul>
+                            <li>If <code>C</code> is...
+                                <ul>
+                                    <li>
+                                        A <u>Number</u> - set <code>C</code> to be equal to the concatenation of S#’s digits (left-to-right; set <code>C</code> to be equal to 0 if there aren’t any digits in the S#).
+                                    </li>
+                                    <li>
+                                        A <u>String</u> - set <code>C</code> to be the name of the module (regular/needy) on the bomb that comes first alphabetically, without any spaces (exclude all modules that do not consist of only letters A-Z and spaces).
+                                    </li>
+                                    <li>
+                                        A <u>Boolean</u> - apply the NOT operator to <code>C</code>.
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>After following one of the rules above, press the cube at any time.</li>
+                        </ul>
+                    </li>
+                    <li>
+                        Otherwise, if <code>C</code> is...
+                        <ul>
+                            <li>
+                                A <u>Number</u> - press the cube when the tens digit of the seconds of the timer if equal to <code>C</code>’s first digit modulo 6.
+                            </li>
+                            <li>
+                                A <u>Boolean</u> - press the cube when the answer to the question “Is the tens digit of the seconds of the timer composite?” matches <code>C</code>.
+                            </li>
+                            <li>
+                                None of the above - press the cube when the seconds digits of the timer match.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Stage 5</h3>
+                <ul>
+                    <li>
+                        If the last digit of the S# is even and <code>C</code> is...
+                        <ul>
+                            <li>
+                                A <u>Number</u> - subtract 10000 from it.
+                            </li>
+                            <li>
+                                A <u>String</u> - shift it to the right by [last digit of the S# + 1], then shift it to the left by [first digit of the S# + 1].
+                            </li>
+                            <li>
+                                <u>Undefined</u> and there is a prime digit in the S# - define <code>C</code> as the <u>String</u> “CUBE”.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        Press the cube when the last digit of timer matches the...
+                        <ul>
+                            <li>
+                                If <code>C</code> is a <u>Number</u> - parity of <code>C</code>.
+                            </li>
+                            <li>
+                                If <code>C</code> is a <u>String</u> - parity of the sum of <code>C</code>’s first and last letters’ alphabetic positions.
+                            </li>
+                            <li>
+                                If <code>C</code> is a <u>Boolean</u> - parity of S#’s first digit if <code>C</code> is <code>TRUE</code> and parity of S#’s last digit if <code>C</code> is <code>FALSE</code>.
+                            </li>
+                            <li>
+                                If <code>C</code> is <u>Undefined</u> - parity of 3525854.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="page-footer relative-footer">3</div>
+        </div>
+
+        <div class="page page-bg-04" >
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Not Colored Cube</span>
+            </div>
+            <div class="page-content" style="font-size: 90%;">
+                <h3>Stages 6-10</h3>
+                <ul>
+                    <li>
+                        Modify <code>C</code> as follows:
+                        <ul>
+                            <li>
+                                If <code>C</code> is a number - use the table below to obtain the modification operation, and if needed, use the other table to obtain the <u>modifier number</u> (<code>M</code>) for this press (which will be some edgework value).
+                                <div style="text-align: center;">
+                                    <table>
+                                        <tr>
+                                            <th style="width: 8em;">Cube color →</th>
+                                            <th>Black</th>
+                                            <th>Red</th>
+                                            <th>Green</th>
+                                            <th>Blue</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Operation →</th>
+                                            <td>Do not modify <code>C</code></td>
+                                            <td>Add [2 * <code>M</code>] to <code>C</code></td>
+                                            <td>Multiply <code>C</code> by <code>M</code></td>
+                                            <td>Divide <code>C</code> by [2 * <code>M</code>]</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Cube color →</th>
+                                            <th>Yellow</th>
+                                            <th>Magenta</th>
+                                            <th>Cyan</th>
+                                            <th>White</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Operation →</th>
+                                            <td>Multiply <code>C</code> by 2, then divide <code>C</code> by <code>M</code></td>
+                                            <td>Subtract <code>M</code> from <code>C</code>, then divide <code>C</code> by 3</td>
+                                            <td>Subtract [<code>C</code> % <code>M</code>] from <code>C</code>, then divide it by <code>M</code></td>
+                                            <td>Reverse <code>C</code></td>
+                                        </tr>
+                                    </table>
+                                    <table>
+                                        <tr>
+                                            <th style="width: 7em;">Stage num. →<br>Cube color ↓</th>
+                                            <th>6</th>
+                                            <th>7</th>
+                                            <th>8</th>
+                                            <th>9</th>
+                                            <th>10</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Black</th>
+                                            <td>Ports</td>
+                                            <td>Vowels in the S#</td>
+                                            <td>RJ-45 ports</td>
+                                            <td>Port plates</td>
+                                            <td>Unlit indicators</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Red</th>
+                                            <td>Battery holders</td>
+                                            <td>Stereo RCA ports</td>
+                                            <td>S#’s 6th character</td>
+                                            <td>DVI-D ports</td>
+                                            <td>Sum of S#’s digits</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Green</th>
+                                            <td>First digit of the S#</td>
+                                            <td>Letters in the S#</td>
+                                            <td>PS/2 ports</td>
+                                            <td>Last digit of the S#</td>
+                                            <td>Consonants in the S#</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Blue</th>
+                                            <td>Letters in the S#</td>
+                                            <td>Serial ports</td>
+                                            <td>D Batteries</td>
+                                            <td>Digits in the S#</td>
+                                            <td>Indicators</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Yellow</th>
+                                            <td>Batteries</td>
+                                            <td>Sum of S#’s digits</td>
+                                            <td>Port plates</td>
+                                            <td>Battery holders</td>
+                                            <td>AA Batteries</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Magenta</th>
+                                            <td>Parallel ports</td>
+                                            <td>AA Batteries</td>
+                                            <td>Last digit of the S#</td>
+                                            <td>Batteries</td>
+                                            <td>Vowels in the S#</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Cyan</th>
+                                            <td>Consonants in the S#</td>
+                                            <td>Digits in the S#</td>
+                                            <td>Battery holders</td>
+                                            <td>S#’s 3rd character</td>
+                                            <td>D Batteries</td>
+                                        </tr>
+                                        <tr>
+                                            <th>White</th>
+                                            <td>Lit indicators</td>
+                                            <td>Ports</td>
+                                            <td>First digit of the S#</td>
+                                            <td>Stereo RCA ports</td>
+                                            <td>Indicators</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="page-footer relative-footer">4</div>
+        </div>
+
+        <div class="page page-bg-05" >
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Not Colored Cube</span>
+            </div>
+            <div class="page-content" style="font-size: 90%;">
+                <ul>
+                    <li>
+                        <ul>
+                            <li>
+                                If <code>C</code> is a string - add the last digit of the S# to the stage number, then, if the first digit of the S# is odd, subtract 5
+                                
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="page-footer relative-footer">5</div>
         </div>
     </div>
 </body>
