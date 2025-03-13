@@ -60,6 +60,7 @@ GameObject:
   - component: {fileID: 114682126398842566}
   - component: {fileID: 114723428541822788}
   - component: {fileID: 114432483186534668}
+  - component: {fileID: 114934792094795974}
   m_Layer: 0
   m_Name: Not Colored Cube
   m_TagString: Untagged
@@ -296,8 +297,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1557734182703736}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0147, z: 0}
-  m_LocalScale: {x: 1.0882843, y: 1.0590488, z: 1.0882854}
+  m_LocalPosition: {x: 0, y: 0.0181, z: 0}
+  m_LocalScale: {x: 1.0882843, y: 1.052186, z: 1.0882859}
   m_Children: []
   m_Father: {fileID: 4731304958968566}
   m_RootOrder: 0
@@ -722,7 +723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cfb889a07d5fd4e9baed7960bb397f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorblindMode: 0
+  _colorblindMode: 1
 --- !u!114 &114507564511688960
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -824,12 +825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Parent: {fileID: 114723428541822788}
   Children:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 114684486024296034}
-  - {fileID: 0}
   IsPassThrough: 0
   ChildRowLength: 0
   Highlight: {fileID: 114000748753638426}
@@ -850,6 +846,24 @@ MonoBehaviour:
   m_Script: {fileID: 2144496390, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114934792094795974
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1492283495299170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59d44faafa3562d46bee8dcb0ff0aaa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bomb: {fileID: 114891783106324484}
+  Audio: {fileID: 114276295216121554}
+  Colorblind: {fileID: 114432483186534668}
+  CubeSelectable: {fileID: 114684486024296034}
+  CubeRenderer: {fileID: 23921480355431670}
+  ColorblindText: {fileID: 102303271479092650}
+  IndexText: {fileID: 102203868012013824}
 --- !u!114 &114962265598218518
 MonoBehaviour:
   m_ObjectHideFlags: 1
