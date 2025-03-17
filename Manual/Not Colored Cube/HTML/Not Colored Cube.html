@@ -215,7 +215,7 @@
                         If the last digit of the S# is even and <code>C</code> is...
                         <ul>
                             <li>
-                                A <u>Number</u> - subtract 10000 from it.
+                                A <u>Number</u> - subtract it from 10000 and set <code>C</code> to be the result.
                             </li>
                             <li>
                                 A <u>String</u> - shift it to the right by [last digit of the S# + 1], then shift it to the left by [first digit of the S# + 1].
@@ -267,31 +267,31 @@
                 <table>
                     <tr>
                         <th style="width: 7em;">Prev. stage’s cube color →</th>
-                        <th class="black">Black</th>
                         <th class="red">Red</th>
                         <th class="green">Green</th>
                         <th class="blue">Blue</th>
+                        <th class="yellow">Yellow</th>
                     </tr>
                     <tr>
                         <th>Operation →</th>
-                        <td>Do not modify <code>C</code></td>
                         <td>Add [2 * <code>M</code>] to <code>C</code></td>
                         <td>Multiply <code>C</code> by <code>M</code></td>
                         <td>Divide <code>C</code> by [2 * <code>M</code>]</td>
+                        <td>Multiply <code>C</code> by 2, then divide <code>C</code> by <code>M</code></td>
                     </tr>
                     <tr>
                         <th>Prev. stage’s cube color →</th>
-                        <th class="yellow">Yellow</th>
                         <th class="magenta">Magenta</th>
                         <th class="cyan">Cyan</th>
                         <th class="white">White</th>
+                        <th class="black">Black</th>
                     </tr>
                     <tr>
                         <th>Operation →</th>
-                        <td>Multiply <code>C</code> by 2, then divide <code>C</code> by <code>M</code></td>
                         <td>Subtract <code>M</code> from <code>C</code>, then divide <code>C</code> by 3</td>
                         <td>Subtract [<code>C</code> % <code>M</code>] from <code>C</code>, then divide it by <code>M</code></td>
                         <td>Reverse <code>C</code></td>
+                        <td>Do not modify <code>C</code></td>
                     </tr>
                 </table>
                 <table>
@@ -299,18 +299,10 @@
                         <th style="width: 7em;">Stage num. →<br>This stage’s cube color ↓</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
                     </tr>
                     <tr>
-                        <th class="black">Black</th>
-                        <td>Ports</td>
-                        <td>Vowels in the S#</td>
-                        <td>RJ-45 ports</td>
-                        <td>Port plates</td>
-                        <td>Unlit indicators</td>
-                    </tr>
-                    <tr>
                         <th class="red">Red</th>
                         <td>Battery holders</td>
                         <td>Stereo RCA ports</td>
-                        <td>S#’s 6th character</td>
+                        <td>Last digit of the S#</td>
                         <td>DVI-D ports</td>
                         <td>Sum of S#’s digits</td>
                     </tr>
@@ -362,6 +354,14 @@
                         <td>Stereo RCA ports</td>
                         <td>Indicators</td>
                     </tr>
+                    <tr>
+                        <th class="black">Black</th>
+                        <td>Ports</td>
+                        <td>Vowels in the S#</td>
+                        <td>RJ-45 ports</td>
+                        <td>Port plates</td>
+                        <td>Unlit indicators</td>
+                    </tr>
                 </table>
             </div>
             <div class="page-footer relative-footer">4</div>
@@ -386,7 +386,7 @@
                                     </li>
                                     <li>
                                         Apply Atbash Cipher to the letter obtained from the previous step (subtract the letter’s alphabetic position from 27 and convert the result back into a letter A1Z26).
-                                        Take [the stage number % the length of <code>C</code>], insert the newly obtained letter into <code>C</code> at that position.
+                                        Take [(the stage number % the length of <code>C</code>) + 1], insert the newly obtained letter into <code>C</code> at that position.
                                     </li>
                                     <li>
                                         Use the table below with the color of the cube to obtain a word, then use the other table with your stage number and [the current length of <code>C</code> % 10] to figure out what letter/substring you should take from the word. 
@@ -400,16 +400,16 @@
                 <table>
                     <tr>
                         <th style="font-size: 85%;">Cube color →</th>
-                        <th class="black">Black</th>
                         <th class="red">Red</th>
                         <th class="green">Green</th>
                         <th class="blue">Blue</th>
-                        <th class="magenta">Magenta</th>
                         <th class="yellow">Yellow</th>
+                        <th class="magenta">Magenta</th>
                         <th class="cyan">Cyan</th>
                         <th class="white">White</th>
+                        <th class="black">Black</th>
                     </tr>
-                    <tr><th>Word →</th><td>VOIDED</td><td>REBOOT</td><td>TOUCHE</td><td>WATERS</td><td>PARSED</td><td>GOLDEN</td><td>BREEZY</td><td>BRIGHT</td></tr>
+                    <tr><th>Word →</th><td>REBOOT</td><td>TOUCHE</td><td>WATERS</td><td>GOLDEN</td><td>PARSED</td><td>BREEZY</td><td>BRIGHT</td><td>VOIDED</td></tr>
                 </table>
 
                 <table>
@@ -455,16 +455,16 @@
                 <table>
                     <tr>
                         <th style="font-size: 85%;">Cube color →</th>
-                        <th class="black">Black</th>
                         <th class="red">Red</th>
                         <th class="green">Green</th>
                         <th class="blue">Blue</th>
-                        <th class="magenta">Magenta</th>
                         <th class="yellow">Yellow</th>
+                        <th class="magenta">Magenta</th>
                         <th class="cyan">Cyan</th>
                         <th class="white">White</th>
+                        <th class="black">Black</th>
                     </tr>
-                    <tr><th>Operator →</th><td>NOT</td><td>OR</td><td>NAND</td><td>XOR</td><td>NOR</td><td>XOR</td><td>XNOR</td><td>AND</td></tr>
+                    <tr><th>Operator →</th><td>OR</td><td>NAND</td><td>XOR</td><td>XOR</td><td>NOR</td><td>XNOR</td><td>AND</td><td>NOT</td></tr>
                 </table>
                 <table>
                     <tr style="background-color: rgb(56, 56, 56);"><th><code>C</code></th><th><code>B</code></th><th>NOT</th><th>OR</th><th>AND</th><th>XOR</th><th>NOR</th><th>NAND</th><th>XNOR</th></tr>
@@ -508,10 +508,10 @@
                     <li>
                         <ul>
                             <li>
-                                A <u>Boolean</u> - press the cube when the answer to the question “Is the last digit of the timer odd?” matches <code>C</code>.
+                                A <u>Boolean</u> - press the cube when the answer to the question “Does the last digit of the timer meet the condition used to obtain the boolean value for this stage?” matches <code>C</code>.
                             </li>
                             <li>
-                                <u>Undefined</u> - subtract 5 from your current stage number, then fully follow that stage’s rules from one of the previous pages of this manual (this may cause <code>C</code> to get defined).
+                                <u>Undefined</u> - subtract 5 from your current stage number, then fully follow that stage’s rules from one of the previous pages of this manual (this may cause <code>C</code> to get defined - after defining <code>C</code>, keep following the stage’s rules all the way until the cube press).
                             </li>
                         </ul>
                     </li>
