@@ -17,6 +17,7 @@ public class notColoredCube : MonoBehaviour
     [SerializeField] MeshRenderer CubeRenderer;
     [SerializeField] TextMesh ColorblindText;
     [SerializeField] TextMesh IndexText;
+    [SerializeField] TextMesh TPSolverText;
 
     static int ModuleIdCounter = 1;
     int ModuleId;
@@ -40,8 +41,10 @@ public class notColoredCube : MonoBehaviour
         { "1-4", "4", "1-6", "1", "4-5" },
         { "5", "1-6", "2", "2-4", "3-5" },
     };
+    string[] BooleanConditions = { "The number is even", "The number is composite.", "The number is odd.", "The number is divisible by 5.", "The number is prime." };
+    string[] BooleanOperators = { "OR", "NAND", "XOR", "XOR", "NOR", "XNOR", "AND", "NOT" };
     enum CTypes { Number, String, Boolean, Undefined };
-    enum PressConditions { LastDigitEqualTo, TensEqualTo, SecondsEqualTo, SecondsDivisibleBy, LastDigitEven, LastDigitOdd, SecondsMatch, AnyTime };
+    enum PressConditions { LastDigitEqualTo, TensEqualTo, SecondsEqualTo, SecondsSumEqualTo, SecondsDifferenceEqualTo, SecondsDivisibleBy, LastDigitEven, LastDigitOdd, BothDigitsEven, BothDigitsOdd, SecondsMatch, AnyTime };
 
     int[,] NumberMTable = new int[8, 5];
     bool cDefined = false;
@@ -54,6 +57,8 @@ public class notColoredCube : MonoBehaviour
     int[] stageColors = new int[10];
     PressConditions pressCondition;
     List<int> pressArgs = new List<int> { };
+
+    bool ZenModeActive;
 
     void Awake()
     {
@@ -70,14 +75,13 @@ public class notColoredCube : MonoBehaviour
             return;
         }
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, CubeSelectable.transform);
-        //ProcessPress(CheckPressCondition());
-        ProcessPress(true);
+        ProcessPress(CheckPressCondition((int)Bomb.GetTime()));
     }
 
-    bool CheckPressCondition()
+    bool CheckPressCondition(int bombTime)
     {
-        int LastDigit = (int)Bomb.GetTime() % 10;
-        int Seconds = (int)Bomb.GetTime() % 60;
+        int LastDigit = bombTime % 10;
+        int Seconds = bombTime % 60;
         int TensDigit = Seconds / 10;
         switch (pressCondition)
         {
@@ -90,6 +94,12 @@ public class notColoredCube : MonoBehaviour
             case PressConditions.SecondsEqualTo:
                 if (pressArgs.Contains(Seconds)) return true;
                 break;
+            case PressConditions.SecondsSumEqualTo:
+                if ((TensDigit + LastDigit) == pressArgs[0]) return true;
+                break;
+            case PressConditions.SecondsDifferenceEqualTo:
+                if (Math.Abs(TensDigit - LastDigit) == pressArgs[0]) return true;
+                break;
             case PressConditions.SecondsDivisibleBy:
                 if (Seconds % pressArgs[0] == 0) return true;
                 break;
@@ -101,6 +111,12 @@ public class notColoredCube : MonoBehaviour
                 break;
             case PressConditions.LastDigitOdd:
                 if (LastDigit % 2 == 1) return true;
+                break;
+            case PressConditions.BothDigitsEven:
+                if (LastDigit % 2 == 0 && TensDigit % 2 == 0) return true;
+                break;
+            case PressConditions.BothDigitsOdd:
+                if (LastDigit % 2 == 1 && TensDigit % 2 == 1) return true;
                 break;
             case PressConditions.AnyTime:
                 return true;
@@ -123,7 +139,7 @@ public class notColoredCube : MonoBehaviour
             int Seconds = (int)Bomb.GetTime() % 60;
             int TensDigit = Seconds / 10;
 
-            string relevantDigitLabel = "";
+            string relevantDigitName = "";
             int relevantDigitValue = 0;
             bool plural = false;
 
@@ -132,17 +148,21 @@ public class notColoredCube : MonoBehaviour
                 case PressConditions.LastDigitEqualTo:
                 case PressConditions.LastDigitEven:
                 case PressConditions.LastDigitOdd:
-                    relevantDigitLabel = "last";
+                    relevantDigitName = "last";
                     relevantDigitValue = LastDigit;
                     break;
                 case PressConditions.TensEqualTo:
-                    relevantDigitLabel = "tens";
+                    relevantDigitName = "tens";
                     relevantDigitValue = TensDigit;
                     break;
                 case PressConditions.SecondsDivisibleBy:
                 case PressConditions.SecondsEqualTo:
+                case PressConditions.SecondsSumEqualTo:
+                case PressConditions.SecondsDifferenceEqualTo:
                 case PressConditions.SecondsMatch:
-                    relevantDigitLabel = "seconds";
+                case PressConditions.BothDigitsEven:
+                case PressConditions.BothDigitsOdd:
+                    relevantDigitName = "seconds";
                     relevantDigitValue = Seconds;
                     plural = true;
                     break;
@@ -151,12 +171,12 @@ public class notColoredCube : MonoBehaviour
             }
             if (correct)
             {
-                Log($"Correctly pressed the cube at {relevantDigitLabel} digit{(plural ? "s" : "")} equal to {relevantDigitValue}.");
+                Log($"Correctly pressed the cube at {relevantDigitName} digit{(plural ? "s" : "")} equal to {relevantDigitValue}.");
                 NextStage();
             }
             else
             {
-                Log($"Incorrectly pressed the cube at {relevantDigitLabel} digit{(plural ? "s" : "")} equal to {relevantDigitValue}. Strike!");
+                Log($"Incorrectly pressed the cube at {relevantDigitName} digit{(plural ? "s" : "")} equal to {relevantDigitValue}. Strike!");
                 GetComponent<KMBombModule>().HandleStrike();
             }
         }
@@ -185,6 +205,12 @@ public class notColoredCube : MonoBehaviour
             case PressConditions.SecondsEqualTo:
                 Log($"You should press the cube when the seconds digits of the timer are {pressArgs.Select(x => IntoTwoDigitNumber(x)).Join("/")}.");
                 break;
+            case PressConditions.SecondsSumEqualTo:
+                Log($"You should press the cube when the sum of the two seconds digits of the timer is {pressArgs[0]}.");
+                break;
+            case PressConditions.SecondsDifferenceEqualTo:
+                Log($"You should press the cube when the difference between the two seconds digits of the timer is {pressArgs[0]}.");
+                break;
             case PressConditions.SecondsDivisibleBy:
                 Log($"You should press the cube when the seconds digits of the timer form a number that is divisible by {pressArgs[0]}.");
                 break;
@@ -193,6 +219,12 @@ public class notColoredCube : MonoBehaviour
                 break;
             case PressConditions.LastDigitOdd:
                 Log($"You should press the cube when the last digit of the timer is odd.");
+                break;
+            case PressConditions.BothDigitsEven:
+                Log($"You should press the cube when both of the seconds digits of the timer are even.");
+                break;
+            case PressConditions.BothDigitsOdd:
+                Log($"You should press the cube when both of the seconds digits of the timer are odd.");
                 break;
             case PressConditions.SecondsMatch:
                 Log($"You should press the cube when both of the seconds digits of the timer match.");
@@ -274,19 +306,19 @@ public class notColoredCube : MonoBehaviour
             switch (curStage)
             {
                 case 0:
-                    ProcessStage1();
+                    ProcessStage1(true);
                     break;
                 case 1:
-                    ProcessStage2();
+                    ProcessStage2(true);
                     break;
                 case 2:
-                    ProcessStage3();
+                    ProcessStage3(true);
                     break;
                 case 3:
-                    ProcessStage4();
+                    ProcessStage4(true);
                     break;
                 case 4:
-                    ProcessStage5();
+                    ProcessStage5(true);
                     break;
                 default:
                     ProcessLateStages();
@@ -296,16 +328,18 @@ public class notColoredCube : MonoBehaviour
         }
     }
 
-    void ProcessStage1()
+    void ProcessStage1(bool generateColor)
     {
-        // 1/3 chance of C getting defined; 2/3 chance of C being left undefined
-        int stage1Color = 0;
-        if (Rnd.Range(0, 3) == 0) stage1Color = new List<int>() { 0, 3, 5, 6, 7 }.PickRandom();
-        else stage1Color = new List<int>() { 1, 2, 4 }.PickRandom();
-        stageColors[curStage] = stage1Color;
-        SetCubeColor();
-
-        switch (stage1Color)
+        if (generateColor)
+        {
+            // 1/3 chance of C getting defined; 2/3 chance of C being left undefined
+            int stage1Color = 0;
+            if (Rnd.Range(0, 3) == 0) stage1Color = new List<int>() { 0, 3, 5, 6, 7 }.PickRandom();
+            else stage1Color = new List<int>() { 1, 2, 4 }.PickRandom();
+            stageColors[curStage] = stage1Color;
+            SetCubeColor();
+        }
+        switch (stageColors[curStage])
         {
             case 0:
             case 5:
@@ -313,7 +347,7 @@ public class notColoredCube : MonoBehaviour
                 cNumber = Bomb.GetSerialNumberNumbers().Last();
                 pressCondition = PressConditions.LastDigitEqualTo;
                 pressArgs = new List<int> { cNumber };
-                Log($"The cube is {ColorFullNames[stage1Color]} - C is now a Number: C = {cNumber}.");
+                Log($"The cube is {ColorFullNames[stageColors[curStage]]} - C is now a Number: C = {cNumber}.");
                 break;
             case 3:
                 cType = CTypes.String;
@@ -334,7 +368,7 @@ public class notColoredCube : MonoBehaviour
                 {
                     pressCondition = cBoolean ? PressConditions.LastDigitOdd : PressConditions.LastDigitEven;
                 }
-                Log($"The cube is {ColorFullNames[stage1Color]} - C is now a Boolean: C = {BoolLog(cBoolean)}.");
+                Log($"The cube is {ColorFullNames[stageColors[curStage]]} - C is now a Boolean: C = {LogBoolean(cBoolean)}.");
                 break;
             default:
                 pressCondition = PressConditions.LastDigitEqualTo;
@@ -344,10 +378,13 @@ public class notColoredCube : MonoBehaviour
         }
     }
 
-    void ProcessStage2()
+    void ProcessStage2(bool generateColor)
     {
-        stageColors[curStage] = Rnd.Range(0, 8);
-        SetCubeColor();
+        if (generateColor)
+        {
+            stageColors[curStage] = Rnd.Range(0, 8);
+            SetCubeColor();
+        }
         switch (cType)
         {
             case CTypes.Number:
@@ -371,9 +408,9 @@ public class notColoredCube : MonoBehaviour
                 if (stageColors[curStage] == 1 || stageColors[curStage] == 2 || stageColors[curStage] == 4 || stageColors[curStage] == 7)
                 {
                     cBoolean = !cBoolean;
-                    Log($"C is a Boolean and the cube is {ColorFullNames[stageColors[curStage]]} - applying the NOT operator: C = {BoolLog(cBoolean)}.");
+                    Log($"C is a Boolean and the cube is {ColorFullNames[stageColors[curStage]]} - applying the NOT operator: C = {LogBoolean(cBoolean)}.");
                 }
-                else Log($"C is a Boolean but the cube is not Black/Green/Blue/Magenta - not modifying C this stage: C = {BoolLog(cBoolean)}.");
+                else Log($"C is a Boolean but the cube is not Black/Green/Blue/Magenta - not modifying C this stage: C = {LogBoolean(cBoolean)}.");
                 pressCondition = PressConditions.LastDigitEqualTo;
                 if (cBoolean) pressArgs = new List<int> { 4, 6, 8, 9 };
                 else pressArgs = new List<int> { 0, 1, 2, 3, 5, 7 }; // 0 and 1 are included here as they are NOT composite. (NOT composite != prime)
@@ -383,7 +420,7 @@ public class notColoredCube : MonoBehaviour
                 {
                     cType = CTypes.Boolean;
                     cBoolean = true;
-                    Log($"C is Undefined and there is an empty port plate - C is now a Boolean: C = {BoolLog(cBoolean)}.");
+                    Log($"C is Undefined and there is an empty port plate - C is now a Boolean: C = {LogBoolean(cBoolean)}.");
                 }
                 else if (Bomb.GetPortCount() >= 5)
                 {
@@ -399,16 +436,18 @@ public class notColoredCube : MonoBehaviour
         }
     }
 
-    void ProcessStage3()
+    void ProcessStage3(bool generateColor)
     {
-        // 1/4 chance for RGB; 3/4 chance for MYCWK
-        int stage3Color = 0;
-        if (Rnd.Range(0, 4) == 0) stage3Color = Rnd.Range(0, 3);
-        else stage3Color = Rnd.Range(3, 8);
-        stageColors[curStage] = stage3Color;
-        SetCubeColor();
-        
-        if (stage3Color < 3)
+        if (generateColor)
+        {
+            // 1/4 chance for RGB; 3/4 chance for MYCWK
+            int stage3Color = 0;
+            if (Rnd.Range(0, 4) == 0) stage3Color = Rnd.Range(0, 3);
+            else stage3Color = Rnd.Range(3, 8);
+            stageColors[curStage] = stage3Color;
+            SetCubeColor();
+        }
+        if (stageColors[curStage] < 3)
         {
             Log($"The cube is Red, Green or Blue ({ColorFullNames[stageColors[curStage]]}) - modifying C:");
             switch (cType)
@@ -433,11 +472,11 @@ public class notColoredCube : MonoBehaviour
                         definedC = true;
                         cType = CTypes.Boolean;
                         cBoolean = false;
-                        Log($"C is Undefined - C is now a Boolean: C = {BoolLog(cBoolean)}.");
+                        Log($"C is Undefined - C is now a Boolean: C = {LogBoolean(cBoolean)}.");
                     }
                     bool XNOR = Bomb.GetSolvableModuleNames().Count % 2 == 0;
                     cBoolean = !(cBoolean ^ XNOR);
-                    Log($"{(definedC ? "C has been defined as a Boolean now" : "C is a Boolean")} - XNORing it with {BoolLog(XNOR)}: C = {BoolLog(cBoolean)}.");
+                    Log($"{(definedC ? "C has been defined as a Boolean now" : "C is a Boolean")} - XNORing it with {LogBoolean(XNOR)}: C = {LogBoolean(cBoolean)}.");
                     break;
                 default:
                     break;
@@ -456,15 +495,18 @@ public class notColoredCube : MonoBehaviour
         pressArgs = new List<int> { product % 60 };
     }
 
-    void ProcessStage4()
+    void ProcessStage4(bool generateColor)
     {
-        // 1/10 chance for White; 9/10 chance for other colors
-        int stage4Color = 0;
-        if (Rnd.Range(0, 10) == 0) stage4Color = 6;
-        else stage4Color = new List<int> { 0, 1, 2, 3, 4, 5, 7 }.PickRandom();
-        stageColors[curStage] = stage4Color;
-        SetCubeColor();
-        if (stage4Color == 6 && cType != CTypes.Undefined)
+        if (generateColor)
+        {
+            // 1/10 chance for White; 9/10 chance for other colors
+            int stage4Color = 0;
+            if (Rnd.Range(0, 10) == 0) stage4Color = 6;
+            else stage4Color = new List<int> { 0, 1, 2, 3, 4, 5, 7 }.PickRandom();
+            stageColors[curStage] = stage4Color;
+            SetCubeColor();
+        }
+        if (stageColors[curStage] == 6 && cType != CTypes.Undefined)
         {
             Log($"The cube is White and C is defined, modifying C:");
             switch (cType)
@@ -496,7 +538,7 @@ public class notColoredCube : MonoBehaviour
             {
                 case CTypes.Number:
                     pressCondition = PressConditions.TensEqualTo;
-                    pressArgs = new List<int> { Int32.Parse(cNumber.ToString().First().ToString()) % 6 };
+                    pressArgs = new List<int> { (cNumber.ToString().First() - '0') % 6 };
                     break;
                 case CTypes.Boolean:
                     pressCondition = PressConditions.TensEqualTo;
@@ -510,7 +552,7 @@ public class notColoredCube : MonoBehaviour
         }
     }
 
-    void ProcessStage5()
+    void ProcessStage5(bool generateColor)
     {
         stageColors[curStage] = Rnd.Range(0, 8);
         SetCubeColor();
@@ -624,7 +666,7 @@ public class notColoredCube : MonoBehaviour
                 string l2 = Alphabet[25 - Alphabet.IndexOf(l1)].ToString();
                 int insertPos = (curStage + 1) % cString.Length;
                 cString = InsertIntoString(cString, l2, insertPos);
-                Log($"The second obtained letter (after Atbast) is {l2}, which will be inserted into C at position {insertPos + 1}: C = {cString}.");
+                Log($"The second obtained letter (after Atbash) is {l2}, which will be inserted into C at position {insertPos + 1}: C = {cString}.");
 
                 int cLength = cString.Length % 10;
                 string stageWord = StringWords[stageColors[curStage]];
@@ -640,9 +682,156 @@ public class notColoredCube : MonoBehaviour
                 }
                 if ((curStage + 1) % 2 == 0) cString = substring + cString;
                 else cString += substring;
-                Log($"The cube is {ColorFullNames[stageColors[curStage]]}, which gives the word {stageWord}; the {(substring.Length == 1 ? "letter" : "substring")} obtained from the table ({subQuery} - {cLength}/Stage {curStage + 1}) is {substring}, will be {((curStage + 1) % 2 == 0 ? "prepended" : "appended")} to C: C = {cString}.");
+                Log($"The cube is {ColorFullNames[stageColors[curStage]]}, which gives the word {stageWord}; the {(substring.Length == 1 ? "letter" : "substring")} obtained from the table ({subQuery} - {cLength}/Stage {curStage + 1}) is {substring}, which will be {((curStage + 1) % 2 == 0 ? "prepended" : "appended")} to C: C = {cString}.");
                 break;
             case CTypes.Boolean:
+                Log("C is a Boolean:");
+                bool B = false;
+                if (stageColors[curStage] != 7)
+                {
+                    int BM = NumberMTable[stageColors[curStage], curStage - 5];
+                    string BCondition = BooleanConditions[curStage - 5];
+                    switch (curStage - 5)
+                    {
+                        case 0: // Stage 6 - "The number is even."
+                            B = BM % 2 == 0;
+                            break;
+                        case 1: // Stage 7 - "The number is composite."
+                            B = IsComposite(BM);
+                            break;
+                        case 2: // Stage 8 - "The number is odd."
+                            B = BM % 2 == 1;
+                            break;
+                        case 3: // Stage 9 - "The number is divisible by 5."
+                            B = BM % 5 == 0;
+                            break;
+                        case 4: // Stage 10 - "The number is prime."
+                            B = IsPrime(BM);
+                            break;
+                        default:
+                            break;
+                    }
+                    Log($"The number obtained from the Number table is {BM} ({ColorFullNames[stageColors[curStage]]}/Stage {curStage + 1}), and the condition is \"{BCondition}\": B = {LogBoolean(B)}.");
+                }
+                string BOperator = BooleanOperators[stageColors[curStage]];
+                switch (BOperator)
+                {
+                    case "NOT":
+                        cBoolean = !cBoolean;
+                        break;
+                    case "OR":
+                        cBoolean |= B;
+                        break;
+                    case "AND":
+                        cBoolean &= B;
+                        break;
+                    case "XOR":
+                        cBoolean ^= B;
+                        break;
+                    case "NOR":
+                        cBoolean |= B;
+                        cBoolean = !cBoolean;
+                        break;
+                    case "NAND":
+                        cBoolean &= B;
+                        cBoolean = !cBoolean;
+                        break;
+                    case "XNOR":
+                        cBoolean ^= B;
+                        cBoolean = !cBoolean;
+                        break;
+                    default:
+                        break;
+                }
+                Log($"The cube is {ColorFullNames[stageColors[curStage]]}, which gives the {BOperator} operator: C = {LogBoolean(cBoolean)}");
+                break;
+            default:
+                break;
+        }
+        switch (cType)
+        {
+            case CTypes.Number:
+                switch (curStage)
+                {
+                    case 5:
+                        pressCondition = PressConditions.LastDigitEqualTo;
+                        pressArgs = new List<int> { DigitalRoot(cNumber) };
+                        break;
+                    case 6:
+                        pressCondition = PressConditions.SecondsSumEqualTo;
+                        pressArgs = new List<int> { (cNumber % 9) + 3 };
+                        break;
+                    case 7:
+                        pressCondition = PressConditions.SecondsDifferenceEqualTo;
+                        pressArgs = new List<int> { cNumber % 5 };
+                        break;
+                    case 8:
+                        bool parity = cNumber % 2 == 0;
+                        pressCondition = parity ? PressConditions.BothDigitsEven : PressConditions.BothDigitsOdd;
+                        break;
+                    case 9:
+                        pressCondition = PressConditions.SecondsEqualTo;
+                        int tens = (cNumber.ToString().First() - '0') % 6;
+                        int last = cNumber.ToString().Last() - '0';
+                        pressArgs = new List<int> { 10 * tens + last };
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case CTypes.String:
+                pressCondition = PressConditions.SecondsEqualTo;
+                int firstTwoSum = Alphabet.IndexOf(cString[0]) + Alphabet.IndexOf(cString[1]);
+                int lastTwoSum = Alphabet.IndexOf(cString[cString.Length - 1]) + Alphabet.IndexOf(cString[cString.Length - 2]);
+                pressArgs = new List<int> { Math.Abs(firstTwoSum - lastTwoSum) };
+                break;
+            case CTypes.Boolean:
+                switch (curStage - 5)
+                {
+                    case 0: // Stage 6 - "The number is even."
+                        pressCondition = cBoolean ? PressConditions.LastDigitEven : PressConditions.LastDigitOdd;
+                        break;
+                    case 1: // Stage 7 - "The number is composite."
+                        pressCondition = PressConditions.LastDigitEqualTo;
+                        pressArgs = cBoolean ? new List<int> { 4, 6, 8, 9 } : new List<int> { 0, 1, 2, 3, 5, 7 };
+                        break;
+                    case 2: // Stage 8 - "The number is odd."
+                        pressCondition = cBoolean ? PressConditions.LastDigitOdd : PressConditions.LastDigitEven;
+                        break;
+                    case 3: // Stage 9 - "The number is divisible by 5."
+                        pressCondition = PressConditions.LastDigitEqualTo;
+                        pressArgs = cBoolean ? new List<int> { 0, 5 } : new List<int> { 1, 2, 3, 4, 6, 7, 8, 9 };
+                        break;
+                    case 4: // Stage 10 - "The number is prime."
+                        pressCondition = PressConditions.LastDigitEqualTo;
+                        pressArgs = cBoolean ? new List<int> { 2, 3, 5, 7 } : new List<int> { 0, 1, 4, 6, 8, 9 };
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case CTypes.Undefined:
+                Log($"C is Undefined - Processing Stage {curStage - 4}'s rules:");
+                switch (curStage)
+                {
+                    case 5:
+                        ProcessStage1(false);
+                        break;
+                    case 6:
+                        ProcessStage2(false);
+                        break;
+                    case 7:
+                        ProcessStage3(false);
+                        break;
+                    case 8:
+                        ProcessStage4(false);
+                        break;
+                    case 9:
+                        ProcessStage5(false);
+                        break;
+                    default:
+                        break;
+                }
                 break;
             default:
                 break;
@@ -663,7 +852,7 @@ public class notColoredCube : MonoBehaviour
 
     int Mod(int n, int m)
     {
-        if (n == 0) return 0;
+        if (m == 0) return 0;
         else if (n > 0) return n % m;
         else
         {
@@ -682,12 +871,28 @@ public class notColoredCube : MonoBehaviour
         return m == 0 ? 0 : n / m;
     }
 
+    bool IsPrime(int n)
+    {
+        if (n == 1 || n == 0) return false;
+        if (n == 2) return true;
+        for (int i = 2; i <= Math.Ceiling(Math.Sqrt(n)); ++i)
+            if (n % i == 0)
+                return false;
+        return true;
+    }
+
+    bool IsComposite(int n)
+    {
+        if (n == 1 || n == 0) return false;
+        else return !IsPrime(n);
+    }
+
     string InsertIntoString(string s1, string s2, int pos)
     {
         return s1.Substring(0, pos) + s2 + s1.Substring(pos);
     }
 
-    string BoolLog(bool b)
+    string LogBoolean(bool b)
     {
         return b ? "TRUE" : "FALSE";
     }
@@ -698,16 +903,144 @@ public class notColoredCube : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use !{0} to do something.";
+    private readonly string TwitchHelpMessage = @"Use <!{0} #1 #2 #3...> to press the cube when the last digit of the timer is #1, or #2, or #3, etc. Use <!{0} ##1 ##2 ##3...> to press the cube when the seconds of the timer are ##1, or ##2, or ##3, etc. <!{0} any> to press the cube at any time.";
 #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string Command)
     {
-        yield return null;
+        var commandArgs = Command.ToUpperInvariant().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+        if (commandArgs.Length == 0) yield return "sendtochaterror Invalid command!";
+        else if (commandArgs[0] == "ANY")
+        {
+            CubeSelectable.OnInteract();
+            yield return new WaitForSeconds(0.5f);
+        }
+        else
+        {
+            int argLen = commandArgs[0].Length;
+            List<int> pressArgs = new List<int> { };
+            if (argLen < 1 || argLen > 2) yield return "sendtochaterror Invalid time!";
+            else
+            {
+                foreach (string arg in commandArgs)
+                {
+                    if (arg.Length != argLen)
+                    {
+                        yield return "sendtochaterror Invalid time!";
+                        break;
+                    }
+                    else
+                    {
+                        int argNum;
+                        if (int.TryParse(arg, out argNum))
+                        {
+                            if (argLen == 1 && !(0 <= argNum && argNum <= 9))
+                            {
+                                yield return "sendtochatmessage Invalid time!";
+                                break;
+                            }
+                            else if (argLen == 2 && !(0 <= argNum && argNum <= 59))
+                            {
+                                yield return "sendtochatmessage Invalid time!";
+                                break;
+                            }
+                            else pressArgs.Add(argNum);
+                        }
+                        else
+                        {
+                            yield return "sendtochatmessage Invalid time!";
+                            break;
+                        }
+                    }
+                }
+                if (pressArgs.Count > 0)
+                {
+                    if (argLen == 1)
+                    {
+                        while (!pressArgs.Contains((int)Bomb.GetTime() % 10))
+                        {
+                            yield return null;
+                        }
+                    }
+                    else
+                    {
+                        while (!pressArgs.Contains((int)Bomb.GetTime() % 60))
+                        {
+                            yield return null;
+                        }
+                    }
+                    CubeSelectable.OnInteract();
+                    yield return new WaitForSeconds(0.5f);
+                }
+            }
+        }
     }
 
     IEnumerator TwitchHandleForcedSolve()
     {
-        yield return null;
+        TPSolverText.gameObject.SetActive(true);
+        while (!ModuleSolved)
+        {
+            int waitingFor = -1;
+            int curBombTime = (int)Bomb.GetTime();
+            if (ZenModeActive)
+            {
+                for (int t = 0; t < 60; t++)
+                {
+                    if (CheckPressCondition(curBombTime + t))
+                    {
+                        waitingFor = (curBombTime + t) % 60;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (int t = 0; t < 60; t++)
+                {
+                    if (curBombTime - t > 0)
+                    {
+                        if (CheckPressCondition(curBombTime - t))
+                        {
+                            waitingFor = (curBombTime - t) % 60;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (waitingFor > -1)
+            {
+                TPSolverText.text = $"WAITING FOR {IntoTwoDigitNumber(waitingFor)}...";
+                while ((int)Bomb.GetTime() % 60 != waitingFor)
+                {
+                    yield return null;
+                }
+                if (curStage == 9)
+                {
+                    TPSolverText.text = "AUTOSOLVED!";
+                    StartCoroutine(AutoSolveTextAnim());
+                }
+                CubeSelectable.OnInteract();
+                yield return new WaitForSeconds(0.1f);
+            }
+            else
+            {
+                TPSolverText.text = $"NOT ENOUGH TIME,\nAUTOSOLVING NOW!";
+                TPSolverText.fontSize = 120;
+                StartCoroutine(AutoSolveTextAnim());
+                curStage = 9;
+                NextStage();
+            }
+        }
+    }
+
+    IEnumerator AutoSolveTextAnim()
+    {
+        yield return new WaitForSeconds(2f);
+        while (TPSolverText.text.Length > 0)
+        {
+            TPSolverText.text = TPSolverText.text.Substring(0, TPSolverText.text.Length - 1);
+            yield return new WaitForSeconds(0.05f);
+        }
     }
 }
