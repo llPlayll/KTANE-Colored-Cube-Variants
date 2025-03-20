@@ -1,0 +1,10 @@
+{
+  "name": "coloredCubeVariants-Editor",
+  "references": [
+    "coloredCubeVariants"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": []
+}

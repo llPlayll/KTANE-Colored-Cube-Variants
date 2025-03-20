@@ -687,32 +687,29 @@ public class notColoredCube : MonoBehaviour
             case CTypes.Boolean:
                 Log("C is a Boolean:");
                 bool B = false;
-                if (stageColors[curStage] != 7)
+                int BM = NumberMTable[stageColors[curStage], curStage - 5];
+                string BCondition = BooleanConditions[curStage - 5];
+                switch (curStage - 5)
                 {
-                    int BM = NumberMTable[stageColors[curStage], curStage - 5];
-                    string BCondition = BooleanConditions[curStage - 5];
-                    switch (curStage - 5)
-                    {
-                        case 0: // Stage 6 - "The number is even."
-                            B = BM % 2 == 0;
-                            break;
-                        case 1: // Stage 7 - "The number is composite."
-                            B = IsComposite(BM);
-                            break;
-                        case 2: // Stage 8 - "The number is odd."
-                            B = BM % 2 == 1;
-                            break;
-                        case 3: // Stage 9 - "The number is divisible by 5."
-                            B = BM % 5 == 0;
-                            break;
-                        case 4: // Stage 10 - "The number is prime."
-                            B = IsPrime(BM);
-                            break;
-                        default:
-                            break;
-                    }
-                    Log($"The number obtained from the Number table is {BM} ({ColorFullNames[stageColors[curStage]]}/Stage {curStage + 1}), and the condition is \"{BCondition}\": B = {LogBoolean(B)}.");
+                    case 0: // Stage 6 - "The number is even."
+                        B = BM % 2 == 0;
+                        break;
+                    case 1: // Stage 7 - "The number is composite."
+                        B = IsComposite(BM);
+                        break;
+                    case 2: // Stage 8 - "The number is odd."
+                        B = BM % 2 == 1;
+                        break;
+                    case 3: // Stage 9 - "The number is divisible by 5."
+                        B = BM % 5 == 0;
+                        break;
+                    case 4: // Stage 10 - "The number is prime."
+                        B = IsPrime(BM);
+                        break;
+                    default:
+                        break;
                 }
+                Log($"The number obtained from the Number table is {BM} ({ColorFullNames[stageColors[curStage]]}/Stage {curStage + 1}), and the condition is \"{BCondition}\": B = {LogBoolean(B)}.");
                 string BOperator = BooleanOperators[stageColors[curStage]];
                 switch (BOperator)
                 {
@@ -903,7 +900,7 @@ public class notColoredCube : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use <!{0} #1 #2 #3...> to press the cube when the last digit of the timer is #1, or #2, or #3, etc. Use <!{0} ##1 ##2 ##3...> to press the cube when the seconds of the timer are ##1, or ##2, or ##3, etc. <!{0} any> to press the cube at any time.";
+    private readonly string TwitchHelpMessage = @"Use <!{0} #1 #2 #3...> to press the cube when the last digit of the timer is #1, or #2, or #3, etc. Use <!{0} ##1 ##2 ##3...> to press the cube when the seconds of the timer are ##1, or ##2, or ##3, etc. Use <!{0} any> to press the cube at any time. Use <!{0} cb> to toggle colorblind mode.";
 #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string Command)
@@ -912,7 +909,14 @@ public class notColoredCube : MonoBehaviour
         if (commandArgs.Length == 0) yield return "sendtochaterror Invalid command!";
         else if (commandArgs[0] == "ANY")
         {
+            yield return null;
             CubeSelectable.OnInteract();
+            yield return new WaitForSeconds(0.5f);
+        }
+        else if (commandArgs[0] == "CB")
+        {
+            yield return null;
+            ColorblindText.gameObject.SetActive(!ColorblindText.gameObject.activeInHierarchy);
             yield return new WaitForSeconds(0.5f);
         }
         else

@@ -15,8 +15,8 @@
             text-align: center;
         }
         ul ol { margin: 0; }
-        code { text-decoration: underline; }
-        caption { caption-side: bottom; }
+        code { text-decoration: underline; font-weight: bold; }
+        caption { caption-side: bottom; font-size: 90%; }
 
         .red { background-color: red; color: black; }
         .green { background-color: lime; color: black; }
@@ -64,7 +64,7 @@
                         The string can be modified by prepending/inserting/appending characters or strings to it
                         (appending “CUBE” to “COLORED” yields “COLORED<strong>CUBE</strong>”; prepending “NOT” into “COLORED” yields “<strong>NOT</strong>COLORED”; inserting “U” to “COLORED” at position 5 yields “COLO<strong>U</strong>RED”),
                         reversing it, or shifing it to the left/right by a certain amount (“<strong>A</strong>BC” shifted to the left twice yields “C<strong>A</strong>B”; “<strong>X</strong>YZ” shifted to the right twice yields “YZ<strong>X</strong>”).
-                        Additionally, you are able to take one of the string’s substrings for certaing operations or conditions.
+                        Additionally, you are able to take one of the string’s substrings for certain operations or conditions.
                     </li>
                     <li>
                         <u>Boolean</u> - a truth value which can be either <code>TRUE</code> or <code>FALSE</code>.
@@ -289,7 +289,7 @@
                     <tr>
                         <th>Operation →</th>
                         <td>Subtract <code>M</code> from <code>C</code>, then divide <code>C</code> by 3</td>
-                        <td>Subtract [<code>C</code> % <code>M</code>] from <code>C</code>, then divide it by <code>M</code></td>
+                        <td>Subtract [<code>C</code> % <code>M</code>] from <code>C</code>, then divide <code>C</code> by <code>M</code></td>
                         <td>Reverse <code>C</code></td>
                         <td>Do not modify <code>C</code></td>
                     </tr>
@@ -467,11 +467,11 @@
                     <tr><th>Operator →</th><td>OR</td><td>NAND</td><td>XOR</td><td>XOR</td><td>NOR</td><td>XNOR</td><td>AND</td><td>NOT</td></tr>
                 </table>
                 <table>
-                    <tr style="background-color: rgb(56, 56, 56);"><th><code>C</code></th><th><code>B</code></th><th>NOT</th><th>OR</th><th>AND</th><th>XOR</th><th>NOR</th><th>NAND</th><th>XNOR</th></tr>
-                    <tr><td><code>F</code></td><td><code>F</code></td><td><code>T</code></td><td><code>F</code></td><td><code>F</code></td><td><code>F</code></td><td><code>T</code></td><td><code>T</code></td><td><code>T</code></td></tr>
-                    <tr><td><code>F</code></td><td><code>T</code></td><td><code>T</code></td><td><code>T</code></td><td><code>F</code></td><td><code>T</code></td><td><code>F</code></td><td><code>T</code></td><td><code>F</code></td></tr>
-                    <tr><td><code>T</code></td><td><code>F</code></td><td><code>F</code></td><td><code>T</code></td><td><code>F</code></td><td><code>T</code></td><td><code>F</code></td><td><code>T</code></td><td><code>F</code></td></tr>
-                    <tr><td><code>T</code></td><td><code>T</code></td><td><code>F</code></td><td><code>T</code></td><td><code>T</code></td><td><code>F</code></td><td><code>F</code></td><td><code>F</code></td><td><code>T</code></td></tr>
+                    <tr style="background-color: rgb(56, 56, 56); color: white;"><th><code>C</code></th><th><code>B</code></th><th>NOT</th><th>OR</th><th>AND</th><th>XOR</th><th>NOR</th><th>NAND</th><th>XNOR</th></tr>
+                    <tr><td class="red"><code>F</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td><td class="red"><code>F</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="green"><code>T</code></td><td class="green"><code>T</code></td></tr>
+                    <tr><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="green"><code>T</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td></tr>
+                    <tr><td class="green"><code>T</code></td><td class="red"><code>F</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td></tr>
+                    <tr><td class="green"><code>T</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td><td class="green"><code>T</code></td><td class="red"><code>F</code></td><td class="red"><code>F</code></td><td class="red"><code>F</code></td><td class="green"><code>T</code></td></tr>
                 </table>
                 <ul>
                     <li>
