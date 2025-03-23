@@ -40,7 +40,7 @@ public class recoloredCube : MonoBehaviour
     int ModuleId;
     private bool ModuleSolved;
 
-    int ToggledCubeletsCount = 5;
+    int ToggledCubeletsCount = 8;
 
     void Awake()
     {
