@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <title>Uncolored Cube — Keep Talking and Nobody Explodes Module</title>
+    <link rel="stylesheet" type="text/css" href="css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="js/ktane-utils.js"></script>
+    <style>
+        table {
+            margin: 1em auto;
+            border: none;
+        }
+
+        .page-footer::before { content: 'Page '; }
+        .page-footer::after { content: ' of 2'; }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="page page-bg-01">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Uncolored Cube</span>
+            </div>
+            <div class="page-content">
+                <img src="img/Component/Colored Cube.svg" class="diagram">
+                <h2>On the Subject of Uncolored Cube</h2>
+                <p class="flavour-text">Who knew there would even be gambling with cubes?</p>
+                <p>
+                    This module contains a Colored Cube, which can be either (R)ed, (G)reen, (B)lue, (Y)ellow, (M)agenta, (C)yan, (W)hite or Blac(K).
+                    The cube is split into two selectable halves: one is located mostly on the cube’s front face, and other is located is located mostly on the cube’s back face.
+                </p>
+                <p>
+                    In this module, you will be judging a “card” game called <strong>Colocuber</strong> - the rules of this game can be found in <strong>Appendix COLOCUBER</strong>.
+                    Make sure to thoroughly familiarize yourself with the game’s rules.
+                </p>
+                <p>
+                    Additionally, you have agreed with one of the players to make them win by telling them some information they wouldn’t usually know, and in exchange - they will solve this module.
+                    Your player’s opponent is an experienced Colocuber player - don’t let them see through your lies!
+                </p><br>
+                <p>
+                    Your player’s opponent always goes first - their played cube will be on the module.
+                    Your next cube press (the pressed half and the seconds on the timer at the time of the press, called <u>T</u>) will send a message that will determine what cube your player will play:
+                </p>
+                <ul>
+                    <li>
+                        Take <u>T</u> modulo 8, then add 1 to obtain <u>C</u>.
+                        Your player will play a cube with the color with the value equal to <u>C</u>.
+                    </li>
+                    <li>
+                        Divide <u>T</u> by 7 and drop decimals if needed.
+                        If you pressed the front-face half of the cube, negate the result (write it with a “-” sign).
+                        If you pressed the back-face half of the cube, keep the result as is (write it with a “+” sign).
+                        Finally, add the new result to the opponent’s played cube’s number value to obtain <u>N</u>.
+                        Your player will play a cube with the number value equal to <u>N</u>.
+                        <ul>
+                            <li>
+                                If <u>N</u> goes below 1 or above 10, your player will fully ignore your message.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>
+                    After you send your message, the cube that your player played will be on the module.
+                    Now you must judge the played round: if your player won, press the back-face half; if the opponent won, press the front-face half.
+                </p>
+            </div>
+            <div class="page-footer relative-footer">1</div>
+        </div>
+
+        <div class="page page-bg-02">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Uncolored Cube</span>
+            </div>
+            <div class="page-content">
+                <h3>Section</h3>
+                <p>More info.</p>
+            </div>
+            <div class="page-footer relative-footer">2</div>
+        </div>
+    </div>
+</body>
+</html>
