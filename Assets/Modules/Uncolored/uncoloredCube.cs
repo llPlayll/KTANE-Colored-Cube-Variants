@@ -308,7 +308,7 @@ public class uncoloredCube : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use <!{0} b/back/f/front (##)> to press the back-face/front-face half of the cube, optionally when the seconds on the timer are ##. Use <!{0} cb> to toggle colorblind mode";
+    private readonly string TwitchHelpMessage = @"Use <!{0} b/back/f/front (##)> to press the back-face/front-face half of the cube, optionally when the seconds on the timer are ##.";
 #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string Command)
@@ -317,12 +317,6 @@ public class uncoloredCube : MonoBehaviour
 
         int targetTime = -1;
         if (commandArgs.Length < 1 || commandArgs.Length > 2) yield return "sendtochaterror Invalid command!";
-        else if (commandArgs[0] == "CB" && commandArgs.Length == 1)
-        {
-            yield return null;
-            ColorblindText.gameObject.SetActive(!ColorblindText.gameObject.activeInHierarchy);
-            yield return new WaitForSeconds(0.5f);
-        }
         else if (!new string[] { "B", "BACK", "F", "FRONT" }.Contains(commandArgs[0])) yield return "sendtochaterror Invalid press!";
         else if (commandArgs.Length == 2)
         {
