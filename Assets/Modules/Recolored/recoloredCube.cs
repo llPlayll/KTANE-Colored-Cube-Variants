@@ -42,6 +42,8 @@ public class recoloredCube : MonoBehaviour
 
     int ToggledCubeletsCount = 8;
 
+    bool ZenModeActive;
+
     void Awake()
     {
         ModuleId = ModuleIdCounter++;
@@ -342,6 +344,42 @@ public class recoloredCube : MonoBehaviour
 
     IEnumerator TwitchHandleForcedSolve()
     {
-        yield return null;
+        if (!moduleStarted)
+        {
+            yield return null;
+            OnCubeletPress(0);
+        }
+        else
+        {
+            while ((int)Bomb.GetTime() % 10 != 0)
+            {
+                yield return null;
+            }
+            OnCubeletPress(0);
+            yield return new WaitForSeconds(0.1f);
+            OnCubeletPress(0);
+            yield return new WaitForSeconds(0.1f);
+        }
+        for (int c = 0; c < 3; c++)
+        {
+            int C = ZenModeActive ? c : 2 - c;
+            List<int> acceptableLD = C == 0 ? new List<int> { 1, 2, 3 } : (C == 1 ? new List<int> { 4, 5, 6 } : new List<int> { 7, 8, 9 });
+            while (!acceptableLD.Contains((int)Bomb.GetTime() % 10))
+            {
+                yield return null;
+            }
+            for (int i = 0; i < ToggledCubeletsCount; i++)
+            {
+                if (toggledCubeletsChannels[i][C] == '1')
+                {
+                    while (!acceptableLD.Contains((int)Bomb.GetTime() % 10))
+                    {
+                        yield return null;
+                    }
+                    OnCubeletPress(toggledCubelets[i]);
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
+        }
     }
 }
