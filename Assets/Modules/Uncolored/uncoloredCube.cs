@@ -14,9 +14,10 @@ public class uncoloredCube : MonoBehaviour
     [SerializeField] private KMColorblindMode Colorblind;
 
     [SerializeField] MeshRenderer CubeRenderer;
-    [SerializeField] List<KMSelectable> Halves;
+    [SerializeField] List<KMSelectable> Halves; // 0 - Front; 1 - Back
     [SerializeField] TextMesh ColorblindText;
     [SerializeField] TextMesh IndexText;
+    [SerializeField] TextMesh TPSolverText;
 
     Color[] ColorList = { Color.red, Color.green, Color.blue, Color.yellow, Color.magenta, Color.cyan, Color.white, Color.black };
     string[] ColorShortNames = { "R", "G", "B", "Y", "M", "C", "W", "K" };
@@ -302,6 +303,12 @@ public class uncoloredCube : MonoBehaviour
         else return "0" + t.ToString();
     }
 
+    string IntoTwoDigitNumber(int n)
+    {
+        if (n > 9) return n.ToString();
+        else return "0" + n.ToString();
+    }
+
     void Log(string arg)
     {
         Debug.Log($"[Uncolored Cube #{ModuleId}] {arg}");
@@ -343,6 +350,7 @@ public class uncoloredCube : MonoBehaviour
 
     IEnumerator TwitchHandleForcedSolve()
     {
+        TPSolverText.gameObject.SetActive(true);
         while (!ModuleSolved)
         {
             if (!messageSent)
@@ -366,12 +374,28 @@ public class uncoloredCube : MonoBehaviour
                             if (winner == 1) continue;
                         }
                         else if (winner != 1) continue; // Otherwise, we should win
-                        while ((int)Bomb.GetTime() % 60 != T)
+                        if (T > 0)
                         {
-                            yield return null;
+                            TPSolverText.text = $"WAITING FOR {IntoTwoDigitNumber(T)}...";
+                            while ((int)Bomb.GetTime() % 60 != T)
+                            {
+                                yield return null;
+                            }
+                            Halves[h].OnInteract();
+                            yield return new WaitForSeconds(0.1f);
                         }
-                        Halves[h].OnInteract();
-                        yield return new WaitForSeconds(0.1f);
+                        else
+                        {
+                            TPSolverText.text = $"NOT ENOUGH TIME,\nAUTOSOLVING NOW!";
+                            TPSolverText.fontSize = 120;
+                            StartCoroutine(AutoSolveTextAnim());
+                            messageSent = true;
+                            plWins = 2;
+                            winStreak = 0;
+                            plWonRound = true;
+                            tie = false;
+                            HalfPressed(1);
+                        }
                         break;
                     }
                     if (messageSent) break;
@@ -380,10 +404,23 @@ public class uncoloredCube : MonoBehaviour
             else
             {
                 yield return null;
+                if (plWins == 2 && winStreak != 2 && plWonRound && !tie)
+                {
+                    TPSolverText.text = "AUTOSOLVED!";
+                    StartCoroutine(AutoSolveTextAnim());
+                }
                 Halves[plWonRound ? 1 : 0].OnInteract();
                 yield return new WaitForSeconds(0.1f);
             }
-            
+        }
+    }
+    IEnumerator AutoSolveTextAnim()
+    {
+        yield return new WaitForSeconds(2f);
+        while (TPSolverText.text.Length > 0)
+        {
+            TPSolverText.text = TPSolverText.text.Substring(0, TPSolverText.text.Length - 1);
+            yield return new WaitForSeconds(0.05f);
         }
     }
 }

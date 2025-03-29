@@ -31,6 +31,7 @@ public class recoloredCube : MonoBehaviour
     List<int> toggledCubelets = new List<int> { };
     List<string> toggledCubeletsChannels = new List<string> { };
 
+    int ToggledCubeletsCount;
     int curHL;
     bool moduleStarted;
     bool resetOnNextPress;
@@ -39,8 +40,6 @@ public class recoloredCube : MonoBehaviour
     static int ModuleIdCounter = 1;
     int ModuleId;
     private bool ModuleSolved;
-
-    int ToggledCubeletsCount = 8;
 
     bool ZenModeActive;
 
@@ -124,7 +123,7 @@ public class recoloredCube : MonoBehaviour
             {
                 Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.ButtonPress, CubeletsSelectables[c].transform);
                 resetOnNextPress = false;
-                ToggleCubelet(c, lastDigit < 4 ? 0 : (lastDigit < 7 ? 1 : 2));
+                ToggleCubelet(c, (lastDigit - 1) / 3);
                 CheckSolution();
             }
         }
@@ -132,6 +131,8 @@ public class recoloredCube : MonoBehaviour
 
     void Start()
     {
+        ToggledCubeletsCount = Rnd.Range(6, 9);
+        IndexText.text = ToggledCubeletsCount.ToString();
         targetColor = Rnd.Range(0, 8);
         Log($"The target color is {ColorFullNames[targetColor]}.");
         MainColorblindText.text = ColorShortNames[targetColor];
@@ -201,7 +202,7 @@ public class recoloredCube : MonoBehaviour
                     ct.GetComponent<TextMesh>().text = "";
                 }
             }
-            MainColorblindText.gameObject.SetActive(true);
+            MainColorblindText.gameObject.SetActive(ColorblindActive);
             MainColorblindText.text = "!";
             MainColorblindText.color = Color.white;
         }
@@ -209,13 +210,13 @@ public class recoloredCube : MonoBehaviour
 
     void ToggleCubelet(int c, int toggle)
     {
-        ToggleColor(c, toggle); // Itself
-        if (c < 18) ToggleColor(c + 9, toggle); // Layer below
-        if (c > 8) ToggleColor(c - 9, toggle); // Layer above
-        if ((c % 9) < 6) ToggleColor(c + 3, toggle); // Below (on the face)
-        if ((c % 9) > 2) ToggleColor(c - 3, toggle); // Above (on the face)
-        if (c % 3 < 2) ToggleColor(c + 1, toggle); // To the right (on the face)
-        if (c % 3 > 0) ToggleColor(c - 1, toggle); // To the left (on the face)
+        ToggleMainColor(c, toggle); // Itself
+        if (c < 18) ToggleMainColor(c + 9, toggle); // Layer below
+        if (c > 8) ToggleMainColor(c - 9, toggle); // Layer above
+        if ((c % 9) < 6) ToggleMainColor(c + 3, toggle); // Below (on the face)
+        if ((c % 9) > 2) ToggleMainColor(c - 3, toggle); // Above (on the face)
+        if (c % 3 < 2) ToggleMainColor(c + 1, toggle); // To the right (on the face)
+        if (c % 3 > 0) ToggleMainColor(c - 1, toggle); // To the left (on the face)
         SetCubeletColors();
     }
 
@@ -245,14 +246,18 @@ public class recoloredCube : MonoBehaviour
         }
     }
 
-    void ToggleColor(int c, int toggle)
+    void ToggleMainColor(int c, int toggle)
     {
-        string initColor = cubeletBinaries[c];
+        cubeletBinaries[c] = ToggleColor(cubeletBinaries[c], toggle);
+    }
+
+    string ToggleColor(string color, int toggle)
+    {
         string toggledColor = "";
-        if (toggle == 0) toggledColor = (initColor[0] == '0' ? '1' : '0').ToString() + initColor[1].ToString() + initColor[2].ToString();
-        else if (toggle == 1) toggledColor = initColor[0].ToString() + (initColor[1] == '0' ? '1' : '0').ToString() + initColor[2].ToString();
-        else toggledColor = initColor[0].ToString() + initColor[1].ToString() + (initColor[2] == '0' ? '1' : '0').ToString();
-        cubeletBinaries[c] = toggledColor;
+        if (toggle == 0) toggledColor = (color[0] == '0' ? '1' : '0').ToString() + color[1].ToString() + color[2].ToString();
+        else if (toggle == 1) toggledColor = color[0].ToString() + (color[1] == '0' ? '1' : '0').ToString() + color[2].ToString();
+        else toggledColor = color[0].ToString() + color[1].ToString() + (color[2] == '0' ? '1' : '0').ToString();
+        return toggledColor;
     }
 
     string LogToggledCubelet(int c)
@@ -360,24 +365,23 @@ public class recoloredCube : MonoBehaviour
             OnCubeletPress(0);
             yield return new WaitForSeconds(0.1f);
         }
-        for (int c = 0; c < 3; c++)
+        bool[] autosolverToggled = new bool[3];
+        List<string> toggledChannelsCopy = toggledCubeletsChannels.Select(x => x).ToList();
+        while (!ModuleSolved)
         {
-            int C = ZenModeActive ? c : 2 - c;
+            yield return null;
+            int C = ((int)Bomb.GetTime() % 10 - 1) / 3;
             List<int> acceptableLD = C == 0 ? new List<int> { 1, 2, 3 } : (C == 1 ? new List<int> { 4, 5, 6 } : new List<int> { 7, 8, 9 });
-            while (!acceptableLD.Contains((int)Bomb.GetTime() % 10))
-            {
-                yield return null;
-            }
             for (int i = 0; i < ToggledCubeletsCount; i++)
             {
-                if (toggledCubeletsChannels[i][C] == '1')
+                if (toggledChannelsCopy[i][C] == '1')
                 {
-                    while (!acceptableLD.Contains((int)Bomb.GetTime() % 10))
+                    if (acceptableLD.Contains((int)Bomb.GetTime() % 10))
                     {
-                        yield return null;
+                        OnCubeletPress(toggledCubelets[i]);
+                        toggledChannelsCopy[i] = ToggleColor(toggledChannelsCopy[i], C);
+                        yield return new WaitForSeconds(0.1f);
                     }
-                    OnCubeletPress(toggledCubelets[i]);
-                    yield return new WaitForSeconds(0.1f);
                 }
             }
         }
