@@ -285,7 +285,7 @@ public class recoloredCube : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use <!{0} start> to start the module. Use <!{0} RTA1 GMB3 BBC2> to toggle the Red channel at A1 on the Top layer, the Green channel at B3 on the Middle layer, and the Blue channel at C2 on the Bottom layer (i.e. specify presses using the channel-layer-coordinate format). Use <!{0} reset> to reset the module. Use <!{0} cb> to toggle colorblind mode.";
+    private readonly string TwitchHelpMessage = @"Use <!{0} start> to start the module. Use <!{0} RTA1 GMB3 BBC2> to toggle the Red channel at A1 on the Top layer, the Green channel at B3 on the Middle layer, and the Blue channel at C2 on the Bottom layer (i.e. specify presses using the channel-layer-coordinate format and chain them with spaces). Use <!{0} reset> to reset the module. Use <!{0} cb> to toggle colorblind mode.";
 #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand(string Command)

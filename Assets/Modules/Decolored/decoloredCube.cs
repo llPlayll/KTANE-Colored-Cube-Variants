@@ -113,7 +113,7 @@ public class decoloredCube : MonoBehaviour
                     IndexText.text = "";
                     ColorblindText.text = "!";
                     ColorblindText.color = Color.white;
-                    Face.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
+                    if (TwitchPlaysActive) Face.transform.GetChild(0).GetComponent<MeshRenderer>().enabled = false;
                 }
                 shouldHold = grid[pos].ToString() == ColorShortNames[targetColor];
             }
