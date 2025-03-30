@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1">
+    <title>Varicolored Cube — Keep Talking and Nobody Explodes Module</title>
+    <link rel="stylesheet" type="text/css" href="css/font.css">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="js/ktane-utils.js"></script>
+    <style>
+        table {
+            margin: 1em auto;
+            border: none;
+        }
+        
+        .subject-table {
+            table-layout: fixed;
+            width: 20em;
+            height: 20em;
+            font-size: larger;
+            text-align: center;
+        }
+        .color-cell {
+            border-width: 4px !important;
+        }
+
+        .red { background-color: red; color: black; }
+        .green { background-color: lime; color: black; }
+        .blue { background-color: blue; color: white; }
+        .yellow { background-color: yellow; color: black; }
+        .magenta { background-color: magenta; color: black; }
+        .cyan { background-color: cyan; color: black; }
+        .white { background-color: white; color: black; }
+        .black { background-color: black; color: white; }
+
+        .page-footer::before { content: 'Page '; }
+        .page-footer::after { content: ' of 2'; }
+    </style>
+</head>
+<body>
+    <div class="section">
+        <div class="page page-bg-01">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Varicolored Cube</span>
+            </div>
+            <div class="page-content">
+                <img src="img/Component/Colored Cube.svg" class="diagram">
+                <h2>On the Subject of Varicolored Cube</h2>
+                <p class="flavour-text">Q&A, but the questions are really dumb...</p>
+                <p>
+                    This module contains a Colored Cube, which can be either (R)ed, (G)reen, (B)lue, (Y)ellow, (M)agenta, (C)yan, (W)hite or Blac(K).
+                    Exactly one pair of opposite faces is selectable (either the left and right faces are selectable, or the back and front).
+                </p>
+                <p>
+                    In this module, you will be answering questions about a certain subject, which can be a number, a letter, a color or a direction.
+                    Use the color of the cube and the number in the top left corner of the cube’s top face in the table below to obtain that subject (colors have thicker borders compared to letters/other cells; directions are represented by arrows).
+                </p>
+                <table class="subject-table">
+                    <tr>
+                        <th class="corner"></th>
+                        <th class="red">R</th>
+                        <th class="green">G</th>
+                        <th class="blue">B</th>
+                        <th class="yellow">Y</th>
+                        <th class="magenta">M</th>
+                        <th class="cyan">C</th>
+                        <th class="white">W</th>
+                        <th class="black">K</th>
+                    </tr>
+                    <tr>
+                        <th>1</th>
+                        <td>B</td>
+                        <td><strong>⭧</strong></td>
+                        <td class="magenta color-cell">M</td>
+                        <td><strong>⭠</strong></td>
+                        <td>9</td>
+                        <td class="white color-cell">W</td>
+                        <td><strong>⭢</strong></td>
+                        <td><strong>⭠</strong></td>
+                    </tr>
+                    <tr>
+                        <th>2</th>
+                        <td>N</td>
+                        <td>5</td>
+                        <td>16</td>
+                        <td><strong>⭩</strong></td>
+                        <td>Z</td>
+                        <td class="white color-cell">W</td>
+                        <td class="black color-cell">K</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <th>3</th>
+                        <td>15</td>
+                        <td>4</td>
+                        <td>10</td>
+                        <td><strong>⭡</strong></td>
+                        <td class="red color-cell">R</td>
+                        <td>I</td>
+                        <td><strong>⭩</strong></td>
+                        <td>X</td>
+                    </tr>
+                    <tr>
+                        <th>4</th>
+                        <td>8</td>
+                        <td>V</td>
+                        <td>F</td>
+                        <td><strong>⭨</strong></td>
+                        <td>14</td>
+                        <td>P</td>
+                        <td class="red color-cell">R</td>
+                        <td class="cyan color-cell">C</td>
+                    </tr>
+                    <tr>
+                        <th>5</th>
+                        <td class="yellow color-cell">Y</td>
+                        <td><strong>⭨</strong></td>
+                        <td>A</td>
+                        <td>6</td>
+                        <td class="green color-cell">G</td>
+                        <td class="magenta color-cell">M</td>
+                        <td><strong>⭣</strong></td>
+                        <td><strong>⭦</strong></td>
+                    </tr>
+                    <tr>
+                        <th>6</th>
+                        <td>L</td>
+                        <td>Q</td>
+                        <td>1</td>
+                        <td>K</td>
+                        <td><strong>⭣</strong></td>
+                        <td class="blue color-cell">B</td>
+                        <td>3</td>
+                        <td><strong>⭢</strong></td>
+                    </tr>
+                    <tr>
+                        <th>7</th>
+                        <td>12</td>
+                        <td class="yellow color-cell">Y</td>
+                        <td>U</td>
+                        <td><strong>⭧</strong></td>
+                        <td><strong>⭦</strong></td>
+                        <td>C</td>
+                        <td>D</td>
+                        <td>13</td>
+                    </tr>
+                    <tr>
+                        <th>8</th>
+                        <td class="blue color-cell">B</td>
+                        <td>G</td>
+                        <td class="black color-cell">K</td>
+                        <td>S</td>
+                        <td class="green color-cell">G</td>
+                        <td>11</td>
+                        <td>7</td>
+                        <td><strong>⭡</strong></td>
+                    </tr>
+                </table>
+                <p>
+                    Once you find your subject, press either of the selectable faces.
+                    The left/right faces pair will now be the selectable pair of faces.
+                </p>
+                <p>
+                    Using the new color of the cube and the number in the top left corner of the cube’s top face, obtain a question about the subject in the table on the next page.
+                    If the question correctly asks about the subject, press the left face.
+                </p>
+            </div>
+            <div class="page-footer relative-footer">1</div>
+        </div>
+
+        <div class="page page-bg-02">
+            <div class="page-header">
+                <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                <span class="page-header-section-title">Varicolored Cube</span>
+            </div>
+            <div class="page-content">
+                <h3>Section</h3>
+                <p>More info.</p>
+            </div>
+            <div class="page-footer relative-footer">2</div>
+        </div>
+    </div>
+</body>
+</html>
