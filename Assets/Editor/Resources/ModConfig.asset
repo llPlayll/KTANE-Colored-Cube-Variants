@@ -14,7 +14,30 @@ MonoBehaviour:
   id: coloredCubeVariants
   title: Colored Cube Variants
   author: _Play_
-  description: 
-  version: 0.1
+  description: 'To celebrate Colored Cube''s 2 year (minus 1 day) anniversary, I present
+    to you... Colored Cube Variants!
+
+    A pack of five (and more to come) modules, which are variants of the original
+    Colored Cube!
+
+    They all might look the same, but their solving processes... :3
+
+    Modules currently in the pack:
+
+    * Not Colored Cube
+
+    * Recolored Cube
+
+    * Decolored Cube
+
+    * Uncolored Cube
+
+    * Discolored Cube
+
+
+    Developed by _Play_.
+
+    April Fools! x3'
+  version: 1
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: c3dcf6127aa63944595d3e5c40e52d3f, type: 3}
