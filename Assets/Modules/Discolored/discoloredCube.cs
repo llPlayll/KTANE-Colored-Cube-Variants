@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using KModkit;
 using Rnd = UnityEngine.Random;
@@ -15,7 +14,7 @@ public class discoloredCube : MonoBehaviour
 
     [SerializeField] MeshRenderer CubeRenderer;
     [SerializeField] List<KMSelectable> HorizFaces; // 0 - Left; 1 - Right
-    [SerializeField] List<KMSelectable> VertFaces; // 0 - Back; 1 - Front;
+    [SerializeField] List<KMSelectable> VertFaces; // 0 - Back; 1 - Front
     [SerializeField] TextMesh ColorblindText;
     [SerializeField] TextMesh IndexText;
 
@@ -215,7 +214,7 @@ public class discoloredCube : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use <!{0} l/b/r/f> to press the corresponding faces (you may also use <!{0} u/d> to press the back/front faces respectively). Chain presses without spaces.";
+    private readonly string TwitchHelpMessage = @"Use <!{0} l/b/r/f> to press the corresponding faces (you may also use <!{0} u/d> to press the back/front faces respectively). Chain presses without spaces. Use <!{0} cb> to toggle colorblind mode.";
     private bool TwitchPlaysActive = false;
 #pragma warning restore 414
 
@@ -223,6 +222,11 @@ public class discoloredCube : MonoBehaviour
     {
         var commandArgs = Command.ToUpperInvariant().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
         if (commandArgs.Length != 1) yield return "sendtochaterror Invalid command!";
+        if (commandArgs[0] == "CB")
+        {
+            yield return null;
+            ColorblindText.gameObject.SetActive(!ColorblindText.gameObject.activeInHierarchy);
+        }
         foreach (char f in commandArgs[0])
         {
             if (!"LBRFUD".Contains(f))

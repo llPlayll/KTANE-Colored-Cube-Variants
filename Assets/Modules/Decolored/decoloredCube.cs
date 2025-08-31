@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using KModkit;
 using Rnd = UnityEngine.Random;
@@ -28,6 +26,7 @@ public class decoloredCube : MonoBehaviour
     int startPos, pos;
     bool shouldHold;
 
+    bool activated;
     int targetColor;
     int startDir, dir;
     bool holding;
@@ -41,6 +40,7 @@ public class decoloredCube : MonoBehaviour
     void Awake()
     {
         ModuleId = ModuleIdCounter++;
+        GetComponent<KMBombModule>().OnActivate += delegate () { OnActivate(); };
         Face.OnInteract += delegate () { holding = true; return false; };
         Face.OnInteractEnded += delegate () { FaceRelease(); };
         ColorblindText.gameObject.SetActive(Colorblind.ColorblindModeActive);
@@ -49,7 +49,7 @@ public class decoloredCube : MonoBehaviour
     void FaceRelease()
     {
         Face.AddInteractionPunch();
-        if (ModuleSolved)
+        if (ModuleSolved || !activated)
         {
             return;
         }
@@ -131,9 +131,9 @@ public class decoloredCube : MonoBehaviour
         }
     }
 
-    void SetCubeColor()
+    void SetCubeColor(bool log)
     {
-        Log($"The cube is colored {ColorFullNames[targetColor]}.");
+        if (log) Log($"The cube is colored {ColorFullNames[targetColor]}.");
         CubeRenderer.material.color = ColorList[targetColor];
         ColorblindText.text = ColorShortNames[targetColor];
         IndexText.color = targetColor == 6 ? Color.black : Color.white;
@@ -142,19 +142,26 @@ public class decoloredCube : MonoBehaviour
 
     void Start()
     {
-        startPos = (Bomb.GetSolvableModuleNames().Count * ((int)Bomb.GetTime() / 60 + 1)) % 100;
-        pos = startPos;
-
+        IndexText.text = Rnd.Range(0, 10).ToString();
         targetColor = Rnd.Range(0, 8);
-        while (ColorShortNames[targetColor] == grid[startPos].ToString())
-        {
-            targetColor = Rnd.Range(0, 8);
-        }
-        SetCubeColor();
+        SetCubeColor(false);
 
         startDir = Rnd.Range(0, 4);
         dir = startDir;
         FaceAnchor.transform.Rotate(new Vector3(0, dir * 90, 0));
+    }
+
+    void OnActivate()
+    {
+        activated = true;
+
+        startPos = (Bomb.GetSolvableModuleNames().Count * ((int)Bomb.GetTime() / 60 + 1)) % 100;
+        pos = startPos;
+        while (ColorShortNames[targetColor] == grid[startPos].ToString())
+        {
+            targetColor = Rnd.Range(0, 8);
+        }
+        SetCubeColor(true);
 
         Log($"The selectable face is the {FaceNames[dir]} face.");
         Log($"Starting position is {LogPos()} in the grid.");

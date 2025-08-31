@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using KModkit;
 using Rnd = UnityEngine.Random;
@@ -566,11 +565,11 @@ public class notColoredCube : MonoBehaviour
                     Log($"The last digit of the S# is even and C is a Number - subtracting it from 10000: C = {cNumber}.");
                     break;
                 case CTypes.String:
-                    int shiftValue = Bomb.GetSerialNumberNumbers().Last() - Bomb.GetSerialNumberNumbers().First(); // Positive - right, negative - left.
+                    int shiftValue = (Bomb.GetSerialNumberNumbers().Last() + 1) - (Bomb.GetSerialNumberNumbers().First() + 1); // Positive - right, negative - left.
                     shiftValue %= cString.Length; // In this case I NEED C#'s weird modulo where it keeps the sign
-                    if (shiftValue > 0) cString = cString.Substring(shiftValue + 1) + cString.Substring(0, cString.Length - shiftValue);
+                    if (shiftValue > 0) cString = cString.Substring(cString.Length - shiftValue) + cString.Substring(0, cString.Length - shiftValue);
                     else if (shiftValue < 0) cString = cString.Substring(-shiftValue) + cString.Substring(0, -shiftValue);
-                    Log($"The last digit of the S# is even and C is a String - shifting it to the right by {Bomb.GetSerialNumberNumbers().Last()} then left by {Bomb.GetSerialNumberNumbers().First()}: C = {cString}.");
+                    Log($"The last digit of the S# is even and C is a String - shifting it to the right by {Bomb.GetSerialNumberNumbers().Last() + 1} then left by {Bomb.GetSerialNumberNumbers().First() + 1}: C = {cString}.");
                     break;
                 case CTypes.Undefined:
                     if (Bomb.GetSerialNumberNumbers().Any(x => new List<int> { 2, 3, 5, 7 }.Contains(x)))
