@@ -2,7 +2,7 @@
   "Author": "_Play_",
   "Compatibility": "Compatible",
   "DefuserDifficulty": "VeryEasy",
-  "Description": " Tags: cube, colors, number",
+  "Description": "Accept and answer valid questions about the module's subject, while rejecting any invalid questions. Tags: cube, colors, number",
   "ExpertDifficulty": "Easy",
   "ModuleID": "varicoloredCube",
   "Name": "Varicolored Cube",
