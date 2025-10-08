@@ -21,6 +21,6 @@ MonoBehaviour:
     Cube\r\n* Recolored Cube\r\n* Decolored Cube\r\n* Uncolored Cube\r\n* Discolored
     Cube\r\n* Varicolored Cube\n* Faulty Colored Cube\n* Perspecticolored Cube\n*
     Juxtacolored Cube\n\r\nDeveloped by _Play_.\r\nApril Fools! x3"
-  version: 2
+  version: 2.1
   outputFolder: build
   previewImage: {fileID: 2800000, guid: c3dcf6127aa63944595d3e5c40e52d3f, type: 3}

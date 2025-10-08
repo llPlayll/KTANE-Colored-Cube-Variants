@@ -342,43 +342,47 @@ public class perspecticoloredCube : MonoBehaviour
                         yield return "sendtochatmessage Invalid face!";
                         break;
                 }
-                if (commandArgs.Length == 2)
+                if (commandFace != -1)
                 {
-                    int tryParse;
-                    if (int.TryParse(commandArgs[1], out tryParse))
+                    if (commandArgs.Length == 2)
                     {
-                        if (tryParse > -1 && tryParse < 10) commandHoldDigit = tryParse;
+                        int tryParse;
+                        if (int.TryParse(commandArgs[1], out tryParse))
+                        {
+                            if (tryParse > -1 && tryParse < 10) commandHoldDigit = tryParse;
+                            else
+                            {
+                                yield return "sendtochatmessage Invalid hold digit!";
+                                yield break;
+                            }
+                        }
                         else
                         {
                             yield return "sendtochatmessage Invalid hold digit!";
                             yield break;
                         }
                     }
-                    else
-                    {
-                        yield return "sendtochatmessage Invalid hold digit!";
-                        yield break;
-                    }
-                }
-                if (commandHoldDigit != -1)
-                {
-                    while ((int)Bomb.GetTime() % 10 != commandHoldDigit) yield return null;
-                    if ((int)Bomb.GetTime() % 10 == commandHoldDigit) Faces[commandFace].OnInteract();
-                    else
+                    if (commandHoldDigit != -1)
                     {
                         while ((int)Bomb.GetTime() % 10 != commandHoldDigit) yield return null;
-                        Faces[commandFace].OnInteract();
+                        if ((int)Bomb.GetTime() % 10 == commandHoldDigit) Faces[commandFace].OnInteract();
+                        else
+                        {
+                            while ((int)Bomb.GetTime() % 10 != commandHoldDigit) yield return null;
+                            Faces[commandFace].OnInteract();
+                        }
+                        yield return new WaitUntil(() => holdIndicated);
+                        Faces[commandFace].OnInteractEnded();
                     }
-                    yield return new WaitUntil(() => holdIndicated);
-                    Faces[commandFace].OnInteractEnded();
-                }
-                else
-                {
-                    yield return null;
-                    Faces[commandFace].OnInteractEnded();
+                    else
+                    {
+                        yield return null;
+                        Faces[commandFace].OnInteractEnded();
+                    }
                 }
             }
         }
+        else yield return "sendtochaterror Invalid command!";
     }
 
     IEnumerator TwitchHandleForcedSolve()
