@@ -910,13 +910,11 @@ public class notColoredCube : MonoBehaviour
         {
             yield return null;
             CubeSelectable.OnInteract();
-            yield return new WaitForSeconds(0.5f);
         }
         else if (commandArgs[0] == "CB")
         {
             yield return null;
             ColorblindText.gameObject.SetActive(!ColorblindText.gameObject.activeInHierarchy);
-            yield return new WaitForSeconds(0.5f);
         }
         else
         {

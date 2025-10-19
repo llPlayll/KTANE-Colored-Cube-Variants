@@ -301,82 +301,87 @@ public class faultyColoredCube : MonoBehaviour
     IEnumerator ProcessTwitchCommand(string Command)
     {
 		var commandArgs = Command.ToUpperInvariant().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+        bool cbCmd = false;
         if (commandArgs.Length == 1)
         {
             if (commandArgs[0] == "CB")
             {
                 yield return null;
                 ColorblindText.gameObject.SetActive(!ColorblindText.gameObject.activeInHierarchy);
+                cbCmd = true;
             }
         }
-        if (!inSubmission && commandArgs.Length != 1) yield return "sendtochaterror Invalid command!";
-        if (!inSubmission && commandArgs[0] != "PRESS") yield return "sendtochaterror Invalid command!";
-        if (inSubmission && commandArgs.Length != 7) yield return "sendtochaterror Invalid command!";
-        if (inSubmission && commandArgs[0] != "SUBMIT") yield return "sendtochaterror Invalid command!";
+        if (!cbCmd)
+        {
+            if (!inSubmission && commandArgs.Length != 1) yield return "sendtochaterror Invalid command!";
+            if (!inSubmission && commandArgs[0] != "PRESS") yield return "sendtochaterror Invalid command!";
+            if (inSubmission && commandArgs.Length != 7) yield return "sendtochaterror Invalid command!";
+            if (inSubmission && commandArgs[0] != "SUBMIT") yield return "sendtochaterror Invalid command!";
 
-        if (!inSubmission)
-        {
-            yield return null;
-            CubeSelectable.OnInteract();
-            yield return new WaitForSeconds(0.1f);
-        }
-        else
-        {
-            int[] tpInput = new int[6];
-            bool invalid = false;
-            for (int i = 0; i < 6; i++)
+            if (!inSubmission)
             {
-                switch (commandArgs[i + 1])
-                {
-                    case "R":
-                    case "RED":
-                        tpInput[i] = 0;
-                        break;
-                    case "G":
-                    case "GREEN":
-                        tpInput[i] = 1;
-                        break;
-                    case "B":
-                    case "BLUE":
-                        tpInput[i] = 2;
-                        break;
-                    case "Y":
-                    case "YELLOW":
-                        tpInput[i] = 3;
-                        break;
-                    case "M":
-                    case "MAGENTA":
-                        tpInput[i] = 4;
-                        break;
-                    case "C":
-                    case "CYAN":
-                        tpInput[i] = 5;
-                        break;
-                    case "W":
-                    case "WHITE":
-                        tpInput[i] = 6;
-                        break;
-                    default:
-                        invalid = true;
-                        break;
-                }
-                if (invalid) break;
+                yield return null;
+                CubeSelectable.OnInteract();
+                yield return new WaitForSeconds(0.1f);
             }
-            if (invalid) yield return "sendtochaterror Invalid command!";
             else
             {
-                yield return new WaitUntil(() => flashIdx == 6);
+                int[] tpInput = new int[6];
+                bool invalid = false;
                 for (int i = 0; i < 6; i++)
                 {
-                    yield return new WaitUntil(() => flashIdx == i);
-                    while (submissionInput[i] != tpInput[i])
+                    switch (commandArgs[i + 1])
                     {
-                        CubeSelectable.OnInteract();
-                        yield return new WaitForSeconds(0.05f);
+                        case "R":
+                        case "RED":
+                            tpInput[i] = 0;
+                            break;
+                        case "G":
+                        case "GREEN":
+                            tpInput[i] = 1;
+                            break;
+                        case "B":
+                        case "BLUE":
+                            tpInput[i] = 2;
+                            break;
+                        case "Y":
+                        case "YELLOW":
+                            tpInput[i] = 3;
+                            break;
+                        case "M":
+                        case "MAGENTA":
+                            tpInput[i] = 4;
+                            break;
+                        case "C":
+                        case "CYAN":
+                            tpInput[i] = 5;
+                            break;
+                        case "W":
+                        case "WHITE":
+                            tpInput[i] = 6;
+                            break;
+                        default:
+                            invalid = true;
+                            break;
                     }
+                    if (invalid) break;
                 }
-                yield return new WaitUntil(() => flashIdx == 6);
-                CubeSelectable.OnInteract();
+                if (invalid) yield return "sendtochaterror Invalid command!";
+                else
+                {
+                    yield return new WaitUntil(() => flashIdx == 6);
+                    for (int i = 0; i < 6; i++)
+                    {
+                        yield return new WaitUntil(() => flashIdx == i);
+                        while (submissionInput[i] != tpInput[i])
+                        {
+                            CubeSelectable.OnInteract();
+                            yield return new WaitForSeconds(0.05f);
+                        }
+                    }
+                    yield return new WaitUntil(() => flashIdx == 6);
+                    CubeSelectable.OnInteract();
+                }
             }
         }
     }

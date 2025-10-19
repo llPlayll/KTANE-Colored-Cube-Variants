@@ -240,6 +240,7 @@ public class recoloredCube : MonoBehaviour
                             ct.GetComponent<TextMesh>().color = cColorblind == "W" ? Color.black : Color.white;
                         }
                     }
+                    else CubeletsSelectables[c].transform.Find("Colorblind Texts").gameObject.SetActive(false);
                 }
             }
         }
@@ -305,8 +306,8 @@ public class recoloredCube : MonoBehaviour
         {
             yield return null;
             ColorblindActive = !ColorblindActive;
-            SetCubeletColors();
-            yield return new WaitForSeconds(0.5f);
+            if (!moduleStarted) MainColorblindText.gameObject.SetActive(!MainColorblindText.gameObject.activeInHierarchy);
+            else SetCubeletColors();
         }
         else if (commandArgs[0] == "RESET")
         {

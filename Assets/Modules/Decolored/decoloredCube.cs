@@ -244,7 +244,6 @@ public class decoloredCube : MonoBehaviour
             case "CB":
                 yield return null;
                 ColorblindText.gameObject.SetActive(!ColorblindText.gameObject.activeInHierarchy);
-                yield return new WaitForSeconds(0.5f);
                 break;
             default:
                 break;

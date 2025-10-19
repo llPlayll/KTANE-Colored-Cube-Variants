@@ -322,12 +322,13 @@ public class uncoloredCube : MonoBehaviour
         var commandArgs = Command.ToUpperInvariant().Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
         int targetTime = -1;
+        bool cb = false;
         if (commandArgs.Length < 1 || commandArgs.Length > 2) yield return "sendtochaterror Invalid command!";
         else if (commandArgs[0] == "CB" && commandArgs.Length == 1)
         {
             yield return null;
             ColorblindText.gameObject.SetActive(!ColorblindText.gameObject.activeInHierarchy);
-            yield return new WaitForSeconds(0.5f);
+            cb = true;
         }
         else if (!new string[] { "B", "BACK", "F", "FRONT" }.Contains(commandArgs[0])) yield return "sendtochaterror Invalid press!";
         else if (commandArgs.Length == 2)
@@ -335,16 +336,19 @@ public class uncoloredCube : MonoBehaviour
             if (!int.TryParse(commandArgs[1], out targetTime)) yield return "sendtochaterror Invalid time!";
             else if (!(0 <= targetTime && targetTime <= 59)) yield return "sendtochaterror Invalid time!";
         }
-        yield return null;
-        if (targetTime != -1)
+        if (!cb)
         {
-            while ((int)Bomb.GetTime() % 60 != targetTime)
+            yield return null;
+            if (targetTime != -1)
             {
-                yield return null;
+                while ((int)Bomb.GetTime() % 60 != targetTime)
+                {
+                    yield return null;
+                }
             }
+            Halves[commandArgs[0][0] == 'F' ? 0 : 1].OnInteract();
+            yield return new WaitForSeconds(0.5f);
         }
-        Halves[commandArgs[0][0] == 'F' ? 0 : 1].OnInteract();
-        yield return new WaitForSeconds(0.5f);
     }
 
     IEnumerator TwitchHandleForcedSolve()

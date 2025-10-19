@@ -382,7 +382,6 @@ public class perspecticoloredCube : MonoBehaviour
                 }
             }
         }
-        else yield return "sendtochaterror Invalid command!";
     }
 
     IEnumerator TwitchHandleForcedSolve()

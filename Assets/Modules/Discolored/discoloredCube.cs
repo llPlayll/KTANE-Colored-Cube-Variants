@@ -227,57 +227,69 @@ public class discoloredCube : MonoBehaviour
             yield return null;
             ColorblindText.gameObject.SetActive(!ColorblindText.gameObject.activeInHierarchy);
         }
-        foreach (char f in commandArgs[0])
+        else
         {
-            if (!"LBRFUD".Contains(f))
+            bool valid = true;
+            foreach (char f in commandArgs[0])
             {
-                yield return "sendtochaterror Invalid command!";
-                break;
-            }
-            else if (f == 'R' && hFace == 0)
-            {
-                yield return "sendtochaterror You are unable to interact with the right face!";
-                break;
-            }
-            else if (f == 'L' && hFace == 1)
-            {
-                yield return "sendtochaterror You are unable to interact with the left face!";
-                break;
-            }
-            else if ("DF".Contains(f) && vFace == 0)
-            {
-                yield return "sendtochaterror You are unable to interact with the front face!";
-                break;
-            }
-            else if ("UB".Contains(f) && vFace == 1)
-            {
-                yield return "sendtochaterror You are unable to interact with the back face!";
-                break;
-            }
-        }
-        yield return null;
-        foreach (char f in commandArgs[0])
-        {
-            switch (f)
-            {
-                case 'L':
-                    HorizFaces[0].OnInteract();
+                if (!"LBRFUD".Contains(f))
+                {
+                    yield return "sendtochaterror Invalid command!";
+                    valid = false;
                     break;
-                case 'R':
-                    HorizFaces[1].OnInteract();
+                }
+                else if (f == 'R' && hFace == 0)
+                {
+                    yield return "sendtochaterror You are unable to interact with the right face!";
+                    valid = false;
                     break;
-                case 'U':
-                case 'B':
-                    VertFaces[0].OnInteract();
+                }
+                else if (f == 'L' && hFace == 1)
+                {
+                    yield return "sendtochaterror You are unable to interact with the left face!";
+                    valid = false;
                     break;
-                case 'D':
-                case 'F':
-                    VertFaces[1].OnInteract();
+                }
+                else if ("DF".Contains(f) && vFace == 0)
+                {
+                    yield return "sendtochaterror You are unable to interact with the front face!";
+                    valid = false;
                     break;
-                default:
+                }
+                else if ("UB".Contains(f) && vFace == 1)
+                {
+                    yield return "sendtochaterror You are unable to interact with the back face!";
+                    valid = false;
                     break;
+                }
             }
-            yield return new WaitForSeconds(0.1f);
+            if (valid)
+            {
+                yield return null;
+                foreach (char f in commandArgs[0])
+                {
+                    switch (f)
+                    {
+                        case 'L':
+                            HorizFaces[0].OnInteract();
+                            break;
+                        case 'R':
+                            HorizFaces[1].OnInteract();
+                            break;
+                        case 'U':
+                        case 'B':
+                            VertFaces[0].OnInteract();
+                            break;
+                        case 'D':
+                        case 'F':
+                            VertFaces[1].OnInteract();
+                            break;
+                        default:
+                            break;
+                    }
+                    yield return new WaitForSeconds(0.1f);
+                }
+            }
         }
     }
 
