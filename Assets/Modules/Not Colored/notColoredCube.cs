@@ -956,6 +956,7 @@ public class notColoredCube : MonoBehaviour
                 }
                 if (pressArgs.Count > 0)
                 {
+                    yield return null;
                     if (argLen == 1)
                     {
                         while (!pressArgs.Contains((int)Bomb.GetTime() % 10))
